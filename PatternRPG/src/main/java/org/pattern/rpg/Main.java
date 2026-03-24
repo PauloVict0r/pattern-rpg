@@ -206,8 +206,7 @@ public class main {
                 if(sistema.contains("win")){
                     new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
                 }else{
-                    System.out.print("clear");
-                    System.out.flush();
+                    new ProcessBuilder("clear").inheritIO().start().waitFor();
                 }
             }catch(IOException | InterruptedException e){
                 System.out.println("Erro ao limpar o console: " + e.getMessage());
