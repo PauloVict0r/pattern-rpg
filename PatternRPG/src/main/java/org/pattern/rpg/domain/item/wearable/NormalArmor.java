@@ -19,13 +19,4 @@ public class NormalArmor extends WearableDecorator {
         return "Uma armadura Normal. Oferece uma proteção normal contra ataques além de aumentar a vitalidade do usuário.";
     }
 
-    @Override
-    public boolean isEquipable() {
-        return true;
-    }
-
-    @Override
-    public boolean isUsable() {
-        return false;
-    }
 }

@@ -19,13 +19,4 @@ public class MagicAmulet extends WearableDecorator {
         return "Um antigo amuleto imbuído com energia mágica desconhecida. Dizem que seus usuários ganham força incomum, mas sucumbem pala fadiga.";
     }
 
-    @Override
-    public boolean isEquipable() {
-        return true;
-    }
-
-    @Override
-    public boolean isUsable() {
-        return false;
-    }
 }

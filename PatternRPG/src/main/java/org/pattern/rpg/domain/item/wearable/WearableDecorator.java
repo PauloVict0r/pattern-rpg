@@ -45,4 +45,14 @@ public abstract class WearableDecorator implements Entity, Item {
         return wrappedEntity.receiveDamage(damage);
     }
 
+    @Override
+    public boolean isEquipable() {
+        return true;
+    }
+
+    @Override
+    public boolean isUsable() {
+        return false;
+    }
+
 }

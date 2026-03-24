@@ -18,14 +18,4 @@ public class GoldenArmor extends WearableDecorator {
     public String getDescription() {
         return "Uma armadura forjada em ouro refinado, aumenta a vitalidade e eleva a chance de ataques críticos.";
     }
-
-    @Override
-    public boolean isEquipable() {
-        return true;
-    }
-
-    @Override
-    public boolean isUsable() {
-        return false;
-    }
 }
