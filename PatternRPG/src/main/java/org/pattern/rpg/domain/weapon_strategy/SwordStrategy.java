@@ -1,4 +1,16 @@
 package org.pattern.rpg.domain.weapon_strategy;
 
-public class SwordStrategy {
+import org.pattern.rpg.domain.entity.Entity;
+
+public class SwordStrategy implements WeaponStrategy {
+
+    @Override
+    public int attack(Entity target) {
+        return target.receiveDamage(this.weaponDamage());
+    }
+
+    @Override
+    public int weaponDamage() {
+        return 5;
+    }
 }
