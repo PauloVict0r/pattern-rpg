@@ -6,14 +6,12 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-        LimparTerminal.limparTerminal();
-        // O Scanner nos permite capturar o que o usuário digita no terminal
         Scanner scanner = new Scanner(System.in);
         boolean jogoRodando = true;
 
         // Loop principal do menu
         while (jogoRodando) {
-
+            LimparTerminal.limparTerminal();
             System.out.println("=================================");
             System.out.println("      BEM-VINDO VIAJANTE!       ");
             System.out.println("=================================");
@@ -31,12 +29,12 @@ public class Main {
             try {
                 int opcao = Integer.parseInt(entrada);
 
-                // Estrutura de decisão para cada botão escolhido
                 switch (opcao) {
                     case 1:
                         System.out.println("=> Opção escolhida: CONTINUAR o jogo.");
                         pausar(2000);
                         LimparTerminal.limparTerminal();
+                        fimDeJogo(scanner, "pv", "mahoraga");
                         // Aqui entrará a lógica para carregar o save futuramente
                         break;
                     case 2:
@@ -67,8 +65,6 @@ public class Main {
                 System.out.println("=> Entrada inválida! Digite apenas números.");
             }
         }
-
-        // Boa prática: fechar o scanner ao final do programa
         scanner.close();
     }
 
@@ -115,14 +111,10 @@ public class Main {
             System.out.println("=================================");
             System.out.println("         ARSENAL INICIAL         ");
             System.out.println("=================================");
-            //System.out.println("\nSua escolha (1-3): ");
 
             System.out.println("        Sua escolha (1-3):       ");
             System.out.println("---------------------------------");
 
-            //System.out.println(String.format("| %-15s |", equipamentos[item1]));
-            //System.out.println(String.format("| %-15s |", equipamentos[item2]));
-            //System.out.println(String.format("| %-15s |", equipamentos[item3]));
             espacar(31, equipamentos[item1]);
             espacar(31, equipamentos[item2]);
             espacar(31, equipamentos[item3]);
@@ -150,13 +142,119 @@ public class Main {
                 pausar(2000);
             }
         }
-
         LimparTerminal.limparTerminal();
         System.out.println("=================================");
         System.out.println("Você empunhou: " + equipamentoEscolhido);
         System.out.println("A masmorra aguarda, " + nomePersonagem);
         System.out.println("=================================");
         System.out.println("\nPressione [ENTER] para iniciar a descida...");
+        scanner.nextLine();
+        LimparTerminal.limparTerminal();
+
+        iniciarBatalha(scanner, nomePersonagem, equipamentoEscolhido);
+    }
+
+    public static void iniciarBatalha(Scanner scanner, String nomeJogador, String equipamentoEscolhido){
+        boolean emBatalha = true;
+
+        int nivel = 1;
+        int hp = 100;
+        String logBatalha = "Um grupo de inimigos bloqueia seu caminho!";
+
+        String estadoMenu = "PRINCIPAL";
+
+        while(emBatalha){
+            LimparTerminal.limparTerminal();
+            System.out.println("=================================");
+            System.out.println(String.format("%-25s %25s", "Nível: " + String.format("%02d", nivel), "inimigo 1 (HP: 30)"));
+            System.out.println(String.format("%-25s %25s", "HP: " + hp, "Inimigo 2 (HP: 45)"));
+            System.out.println(String.format("%-25s %25s", "", "Inimigo 3 (HP: 20)"));
+
+            System.out.println("-------------------------------------------------------");
+            int espacosEsquerda = Math.max(0, (55 - logBatalha.length()) / 2);
+            System.out.println(" ".repeat(espacosEsquerda) + logBatalha);
+            System.out.println("-------------------------------------------------------");
+
+            if(estadoMenu.equals("PRINCIPAL")){
+                System.out.println("  1. Atacar      |  3. Fugir (Sair do teste)");
+                System.out.println("  2. Usar item   |");
+                System.out.print("\nO que " + nomeJogador + " fará? (1-3): ");
+
+                String escolha = scanner.nextLine();
+                switch (escolha) {
+                    case "1": estadoMenu = "ATACAR"; break;
+                    case "2": estadoMenu = "ITEM"; break;
+                    case "3": 
+                        logBatalha = "Você fugiu covardemente...";
+                        emBatalha = false; 
+                        break;
+                    default: 
+                        logBatalha = "Ação inválida! Escolha de 1 a 3."; 
+                        break;
+                }
+            }else if(estadoMenu.equals("ATACAR")){
+                System.out.println("  1. Ataque Rápido  (" + equipamentoEscolhido + ")");
+                System.out.println("  2. Ataque Pesado  (" + equipamentoEscolhido + ")");
+                System.out.println("  3. [Voltar]  ");
+                System.out.println("\n Escolha seu ataque (1-3): ");
+
+                String escolha = scanner.nextLine();
+                switch (escolha) {
+                    case "1":
+                        logBatalha = "Você usou Ataque Rápido. Causou 15 de dano.";
+                        estadoMenu = "PRINCIPAL";
+                        break;
+                    case "2":
+                        logBatalha = "Você usou Ataque Pesado. Causou 25 de dano!";
+                        estadoMenu = "PRINCIPAL";
+                        break;
+                    case "3": estadoMenu = "PRINCIPAL"; break;
+                    default: 
+                        logBatalha = "Ataque inválido";
+                        break;
+                }
+            }else if(estadoMenu.equals("ITEM")){
+                System.out.println("  1. Poção de Vida Pequena");
+                System.out.println("  2. Bomba de Fumaça");
+                System.out.println("  3. [Voltar]");
+                System.out.println("\nEscolha o item (1-3): ");
+
+                String escolha = scanner.nextLine();
+                switch (escolha) {
+                    case "1":
+                        logBatalha = "Você usou Poção de vida Pequena. Recuperou 20HP!";
+                        hp = Math.min(100, hp + 20);
+                        estadoMenu = "PRINCIPAL";
+                        break;
+                    case "2":
+                        logBatalha = "Você usou Bomba de Fumaça. Os inimigos foram cegados temporariamente!";
+                        estadoMenu = "PRINCIPAL";
+                        break;
+                    case "3":
+                        estadoMenu = "PRINCIPAL";
+                    default:
+                        logBatalha = "Item Inválido!";
+                        break;
+                }
+            }
+        }
+        System.out.println("\nFim do combate inicial. Pressione [ENTER] para continuar...");
+        scanner.nextLine();
+        fimDeJogo(scanner, nomeJogador, equipamentoEscolhido);
+    }
+
+    public static void fimDeJogo(Scanner scanner, String nomeJogador, String equipamentoEscolhido){
+        LimparTerminal.limparTerminal();
+        System.out.println("=================================");
+        System.out.println("            FIM DE JOGO           ");
+        System.out.println("=================================");
+
+        System.out.println(String.format("| %-15s | %-11s |", "Personagem", nomeJogador));
+        System.out.println(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
+        System.out.println(String.format("| %-15s | %-11s |", "Piso Final", "100"));
+        System.out.println("=================================");
+
+        System.out.println("\n Pressione [ENTER] para retornar ao Menu Principal...");
         scanner.nextLine();
         LimparTerminal.limparTerminal();
     }
