@@ -5,6 +5,7 @@ import java.util.Random;
 public class main {
 
     public static void main(String[] args) {
+        LimparTerminal.limparTerminal();
         // O Scanner nos permite capturar o que o usuário digita no terminal
         Scanner scanner = new Scanner(System.in);
         boolean jogoRodando = true;
@@ -188,10 +189,9 @@ public class main {
 
     public static void espacar(int largura, String string){
         if(string.length() >= largura){
-            System.out.println(string);
+            System.out.println("|" + string + "|");
         }else{
             int espacosEsq = (largura - string.length())/2;
-            int espacosDir = largura - string.length()-espacosEsq;
             String resultado = String.format("%" + (espacosEsq + string.length()) + "s", string);
             resultado = String.format("|" + "%-" + largura + "s" + "|", resultado);
             System.out.println(resultado);
