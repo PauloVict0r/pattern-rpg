@@ -87,4 +87,14 @@ public abstract class Creature implements Entity {
     public void setCriticalChance(double criticalChance) {
         this.criticalChance = criticalChance;
     }
+
+    @Override
+    public boolean isAlive() {
+        return this.hp > 0;
+    }
+
+    @Override
+    public boolean isDead() {
+        return this.hp <= 0;
+    }
 }
