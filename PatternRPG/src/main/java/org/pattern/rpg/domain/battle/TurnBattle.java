@@ -8,13 +8,16 @@ import org.pattern.rpg.domain.entity.*;
 
 
 public class TurnBattle extends Battle {
-
+    
+    // lista de inimigos e player
     private List<Enemy> enemies;
     private Player player;
-
+    
+    // fila de turnos
     private List<Entity> turnQueue;
     private int currentTurnIndex;
-
+    
+    // construtor
     public TurnBattle(Player player) {
         this.player = player;
     }
