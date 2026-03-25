@@ -12,24 +12,20 @@ public class ConnectionDB {
     private static final String USER = "postgres";
     private static final String PASSWORD = "142536";
 
-    private ConnectionDB() {
-    }
+    private ConnectionDB() {}
 
     public static synchronized ConnectionDB getInstance() {
         if (instance == null) {
             instance = new ConnectionDB();
-            System.out.println("Instância única de conexão criada com sucesso!");
         }
         return instance;
     }
 
     public Connection getConnection() {
         try {
-            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Conectado ao banco de dados com sucesso!");
-            return connection;
+            return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
-            System.out.println("Erro ao conectar com o banco de dados!");
+            System.out.println("Database connection error:");
             System.out.println(e.getMessage());
             return null;
         }
