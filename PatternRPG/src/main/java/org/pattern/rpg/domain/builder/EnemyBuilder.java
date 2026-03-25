@@ -1,54 +1,46 @@
 package org.pattern.rpg.domain.builder;
 
+import java.util.function.Supplier;
 import org.pattern.rpg.domain.entity.enemy.Enemy;
-import java.util.List;
+import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
 
 public class EnemyBuilder implements CreatureBuilder {
     private Enemy enemy;
+    private Supplier<Enemy> enemySupplier;
 
-    public EnemyBuilder() {
+    // Recebe a instrução de qual inimigo concreto instanciar (ex: Orc::new)
+    public EnemyBuilder(Supplier<Enemy> enemySupplier) {
+        this.enemySupplier = enemySupplier;
         this.reset();
     }
 
     @Override
     public void reset() {
-        this.enemy = new Enemy();
-    }
-
-    // Supondo que a classe Enemy já tenha os métodos prontos
-    @Override
-    public void setHP(int hp) {
-        enemy.setHp(hp);
+        this.enemy = this.enemySupplier.get();
     }
 
     @Override
-    public void setDefence(int numberDefence) {
-        enemy.setDefence(numberDefence);
-    }
+    public void setName(String name) { this.enemy.setName(name); }
 
     @Override
-    public void setAttack(int numberAttack) {
-        enemy.setAttack(numberAttack);
-    }
+    public void setHP(int hp) { this.enemy.setHP(hp); }
 
     @Override
-    public void setArmor(String itemArmor) {
-        enemy.setArmor(itemArmor);
-    }
+    public void setDefense(int defense) { this.enemy.setDefense(defense); }
 
     @Override
-    public void setWeapon(String itemWeapon) {
-        enemy.setWeapon(itemWeapon);
-    }
+    public void setAttack(int attack) { this.enemy.setAttack(attack); }
 
     @Override
-    public void setInventory(List<String> items) {
-        enemy.setInventory(items);
-    }
+    public void setCriticalChance(double criticalChance) { this.enemy.setCriticalChance(criticalChance); }
 
+    @Override
+    public void setWeapon(WeaponStrategy weapon) { this.enemy.setWeapon(weapon); }
+    
+    // Retorna o Enemy construído
     public Enemy getResult() {
-        Enemy product = this.enemy;
-        this.reset();
-        return product;
+        Enemy finishedEnemy = this.enemy;
+        this.reset(); // Prepara o builder para montar o próximo inimigo
+        return finishedEnemy;
     }
 }

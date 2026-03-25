@@ -1,13 +1,13 @@
 package org.pattern.rpg.domain.builder;
 
-import java.util.List;
+import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
 
 public interface CreatureBuilder {
     void reset();
-    void setHP(int numberHp);
-    void setDefence(int numberDefence);
-    void setAttack(int numberAttack);
-    void setArmor(String itemArmor);
-    void setWeapon(String itemWeapon);
-    void setInventory(List<String> items);
+    void setName(String name);
+    void setHP(int hp);
+    void setDefense(int defense);
+    void setAttack(int attack);
+    void setCriticalChance(double criticalChance);
+    void setWeapon(WeaponStrategy weapon);
 }
