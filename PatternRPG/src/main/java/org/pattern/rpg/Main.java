@@ -34,7 +34,7 @@ public class Main {
                         System.out.println("=> Opção escolhida: CONTINUAR o jogo.");
                         pausar(2000);
                         LimparTerminal.limparTerminal();
-                        fimDeJogo(scanner, "pv", "mahoraga");
+                        mostrarInventario(scanner, 100, 1000, "Mahoraga");
                         // Aqui entrará a lógica para carregar o save futuramente
                         break;
                     case 2:
@@ -241,6 +241,68 @@ public class Main {
         System.out.println("\nFim do combate inicial. Pressione [ENTER] para continuar...");
         scanner.nextLine();
         fimDeJogo(scanner, nomeJogador, equipamentoEscolhido);
+    }
+
+    public static void mostrarInventario(Scanner scanner, int nivel, int hp, String equipamentoInicial){
+        boolean noInventario = true;
+        String abaAtual = "ARMAS";
+
+        String armaduraEquipada = "Armadura quebrada";
+        String armaSecundaria = "Amuletos";
+
+        while(noInventario){
+            LimparTerminal.limparTerminal();
+            System.out.println("=======================================================");
+            System.out.println("HP: " + hp);
+            System.out.println();
+
+            String tituloDireita = "";
+            String item1 = "", item2 = "", item3 ="";
+
+            if(abaAtual.equals("ARMAS")){
+                tituloDireita = "ARMAS:";
+                item1 = "1. " + equipamentoInicial;
+                item2 = "2. " + "Perna de mesa quebrada";
+                item3 = "3. " + "";
+            }else if(abaAtual.equals("ARMADURAS")){
+                tituloDireita = "ARMADURAS:";
+                item1 = "1. " + armaduraEquipada;
+                item2 = "2. " + "Túnica rasgada";
+                item3 = "3. " + "";
+            }else if(abaAtual.equals("ITENS")){
+                tituloDireita = "ITENS:";
+                item1 = "1. " + "Poção de vida pequena";
+                item2 = "2. " + "Bomba de fumaça (x1)";
+                item3 = "3. " + "";
+            }
+
+            System.out.println(String.format("%-35s |  %-20s", "Proteção:        " + armaduraEquipada, tituloDireita));
+            System.out.println(String.format("%-35s |  %-20s", "Arma primária:   " + equipamentoInicial, item1));
+            System.out.println(String.format("%-35s |  %-20s", "Arma secundária: " + armaSecundaria, item2));
+            System.out.println(String.format("%-35s |  %-20s", "", item3));
+
+            System.out.println("-------------------------------------------------------");
+
+            System.out.println("Categorias:");
+            System.out.println("  1. Armas");
+            System.out.println("  2. Armaduras");
+            System.out.println("  3. Itens");
+            System.out.println("  4. [ Voltar ao Jogo ]");
+            System.out.print("\nEscolha uma aba (1-4): ");
+
+            String escolha = scanner.nextLine();
+
+            switch (escolha) {
+                case "1": abaAtual = "ARMAS"; break;
+                case "2": abaAtual = "ARMADURAS"; break;
+                case "3": abaAtual = "ITENS"; break;
+                case "4": noInventario = false; break;
+                default:
+                    System.out.println("=> Categoria Inválida!");
+                    pausar(1200);
+                    break;
+            }
+        }
     }
 
     public static void fimDeJogo(Scanner scanner, String nomeJogador, String equipamentoEscolhido){
