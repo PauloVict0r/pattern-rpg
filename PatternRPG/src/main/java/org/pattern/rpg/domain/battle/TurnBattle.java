@@ -28,6 +28,7 @@ public class TurnBattle extends Battle {
         List<Enemy> spawnedEnemies = new ArrayList<>();
         int numEnemies = new Random().nextInt(3) + 1; // 1 a 3 inimigos
 
+        // sorteia tipos de inimigos
         for (int i = 0; i < numEnemies; i++) {
             String type = enumEnemies.get(new Random().nextInt(enumEnemies.size()));
             spawnedEnemies.add(EnemyFactory.createEnemy(type));
