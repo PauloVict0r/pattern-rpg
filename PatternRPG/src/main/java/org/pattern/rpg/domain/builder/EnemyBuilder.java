@@ -6,7 +6,7 @@ import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
 
 public class EnemyBuilder implements CreatureBuilder {
     private Enemy enemy;
-    private Supplier<Enemy> enemySupplier;
+    private final Supplier<Enemy> enemySupplier;
 
     // Recebe a instrução de qual inimigo concreto instanciar (ex: Orc::new)
     public EnemyBuilder(Supplier<Enemy> enemySupplier) {
