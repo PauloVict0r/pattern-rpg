@@ -2,6 +2,10 @@ package org.pattern.rpg.domain.battle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import org.pattern.rpg.domain.factory.*;
+import org.pattern.rpg.domain.entity.*;
+
 
 public class TurnBattle extends Battle {
 
@@ -17,8 +21,15 @@ public class TurnBattle extends Battle {
 
     @Override
     protected List<Enemy> createEnemies() {
+        List<String> enumEnemies = List.of("goblin", "wolf", "skeleton", "vampire", "dragon", "hollow");
         List<Enemy> spawnedEnemies = new ArrayList<>();
-        // spawnar inimigos (por fazer)
+        int numEnemies = new Random().nextInt(3) + 1; // 1 a 3 inimigos
+
+        for (int i = 0; i < numEnemies; i++) {
+            String type = enumEnemies.get(new Random().nextInt(enumEnemies.size()));
+            spawnedEnemies.add(EnemyFactory.createEnemy(type));
+        }
+
         return spawnedEnemies;
     }
 
@@ -58,7 +69,7 @@ public class TurnBattle extends Battle {
             // lógica player (por fazer)
         } else {
             System.out.println("Turno do Inimigo: " + entity.getName());
-            // lógica inimigo (por fazer)
+            entity.attack();
         }
     }
 
