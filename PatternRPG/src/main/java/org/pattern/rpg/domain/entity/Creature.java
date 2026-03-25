@@ -88,6 +88,10 @@ public abstract class Creature implements Entity {
         this.criticalChance = criticalChance;
     }
 
+    public void setInventory(List<Item> inventory) {
+        this.inventory = inventory;
+    }
+
     @Override
     public boolean isAlive() {
         return this.hp > 0;
