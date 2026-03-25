@@ -3,6 +3,8 @@ package org.pattern.rpg.domain.battle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.domain.factory.*;
 import org.pattern.rpg.domain.entity.*;
 
@@ -73,7 +75,7 @@ public class TurnBattle extends Battle {
             // lógica player (por fazer)
         } else {
             System.out.println("Turno do Inimigo: " + entity.getName());
-            entity.attack();
+            //entity.attack();
         }
     }
 

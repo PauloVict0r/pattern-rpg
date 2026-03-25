@@ -65,4 +65,13 @@ public abstract class Creature implements Entity {
     public String getName() {
         return this.name;
     }
+
+    public boolean isAlive() {
+        return this.hp > 0;
+    }
+
+    public boolean isDead() {
+        return this.hp <= 0;
+    }
+
 }

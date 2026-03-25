@@ -7,4 +7,7 @@ public interface Entity {
     double getCriticalChance();
     int attack(Entity target);
     int receiveDamage(int damage);
+    boolean isAlive();
+    boolean isDead();
+    String getName();
 }

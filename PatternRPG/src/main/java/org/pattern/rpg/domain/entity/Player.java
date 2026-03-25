@@ -1,4 +1,4 @@
 package org.pattern.rpg.domain.entity;
 
-public class Player {
+public class Player extends Creature {
 }

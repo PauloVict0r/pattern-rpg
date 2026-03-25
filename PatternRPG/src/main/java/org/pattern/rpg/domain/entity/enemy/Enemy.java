@@ -1,6 +1,8 @@
 package org.pattern.rpg.domain.entity.enemy;
 
-public abstract class Enemy {
+import org.pattern.rpg.domain.entity.Creature;
+
+public abstract class Enemy extends Creature {
     protected String name;
     protected int health;
     protected int damage;

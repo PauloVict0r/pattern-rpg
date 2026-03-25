@@ -1,5 +1,8 @@
 package org.pattern.rpg.domain.battle;
 
+import org.pattern.rpg.domain.entity.Entity;
+import org.pattern.rpg.domain.entity.enemy.Enemy;
+
 import java.util.List;
 
 public abstract class Battle {
