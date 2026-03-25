@@ -2,7 +2,12 @@ package org.pattern.rpg.presentation.menu;
 
 import org.pattern.rpg.application.GameManager;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
+import org.pattern.rpg.domain.entity.enemy.Enemy;
+import org.pattern.rpg.domain.entity.Player;
+import org.pattern.rpg.domain.factory.*;
+import org.pattern.rpg.domain.entity.*;
 import java.util.Random;
+import java.util.List;
 
 public class Menu {
     private ConsoleUI ui;
@@ -13,7 +18,7 @@ public class Menu {
         this.facade = facade;
     }
 
-    public void exibirMenuPrincipal() {
+    public void exibirMenuPrincipal(ConsoleUI ui) {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("      BEM-VINDO VIAJANTE!       ");
@@ -42,7 +47,7 @@ public class Menu {
                     break;
                 case 3:
                     ui.imprimir("=> Opção escolhida: Visualizar SCORES.");
-                    exibirScores();
+                    exibirScores(ui);
                     break;
                 case 4:
                     ui.imprimir("=> Opção escolhida: SAIR. Até a próxima aventura!");
@@ -148,10 +153,10 @@ public class Menu {
         ui.limparTerminal();
 
         // O Menu delega a continuação para o Facade
-        facade.orquestrarNovoJogo(nomePersonagem, equipamentoEscolhido);
+        facade.orquestrarNovoJogo(nomePersonagem);
     }
 
-    private void exibirScores() {
+    private void exibirScores(ConsoleUI ui) {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            HIGHSCORES           ");
@@ -170,7 +175,7 @@ public class Menu {
         ui.limparTerminal();
     }
 
-    public void exibirFimDeJogo(String nomeJogador, String equipamentoEscolhido) {
+    public void exibirFimDeJogo(String nomeJogador, ConsoleUI ui) {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            FIM DE JOGO           ");
@@ -178,12 +183,106 @@ public class Menu {
         
         // FUTURAMENTE: Os dados virão da entidade Player
         ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", nomeJogador));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
+        //ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
         ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", "100"));
         ui.imprimir("=================================");
 
         ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");
         ui.lerEntrada();
         ui.limparTerminal();
+    }
+
+    public static void Batalha(Player player, List<Enemy> enemiesList, String logBatalha, ConsoleUI ui) {
+        boolean acao = true;
+        int nivel = 1;
+        int vida = 100;
+        String nomeJogador = "rs da silva";
+
+        //logBatalha = "Um grupo de inimigos bloqueia seu caminho!";
+        String estadoMenu = "PRINCIPAL";
+        while(acao){
+            ui.limparTerminal();
+            ui.imprimir("=======================================================");
+            ui.imprimir(String.format("%-25s %25s", "Nível: " + String.format("%02d", nivel), enemiesList.get((1)).getName()));
+            ui.imprimir(String.format("%-25s %25s", "HP: " + vida, enemiesList.get((2)).getName()));
+            ui.imprimir(String.format("%-25s %25s", "", enemiesList.get((3)).getName()));
+
+            ui.imprimir("-------------------------------------------------------");
+            int espacosEsquerda = Math.max(0, (55 - logBatalha.length()) / 2);
+            ui.imprimir(" ".repeat(espacosEsquerda) + logBatalha);
+            ui.imprimir("-------------------------------------------------------");
+
+            if (estadoMenu.equals("PRINCIPAL")) {
+                ui.imprimir("  1. Atacar      |  3. Fugir (Sair do teste)");
+                ui.imprimir("  2. Usar item   |");
+                // Usamos print (sem 'ln') no ConsoleUI futuramente se quiser, 
+                // mas imprimir com quebra de linha funciona bem aqui.
+                ui.imprimir("\nO que " + nomeJogador + " fará? (1-3): ");
+
+                String escolha = ui.lerEntrada();
+                switch (escolha) {
+                    case "1": estadoMenu = "ATACAR"; break;
+                    case "2": estadoMenu = "ITEM"; break;
+                    case "3": 
+                        logBatalha = "Você fugiu covardemente...";
+                        acao = false; 
+                        break;
+                    default: 
+                        logBatalha = "Ação inválida! Escolha de 1 a 3."; 
+                        break;
+                }
+            } else if (estadoMenu.equals("ATACAR")) {
+                ui.imprimir("  1. Ataque Rápido  ");
+                ui.imprimir("  2. Ataque Pesado  ");
+                ui.imprimir("  3. [Voltar]  ");
+                ui.imprimir("\nEscolha seu ataque (1-3): ");
+
+                String escolha = ui.lerEntrada();
+                switch (escolha) {
+                    case "1":
+                        logBatalha = "Você usou Ataque Rápido. Causou 15 de dano.";
+                        estadoMenu = "PRINCIPAL";
+                        acao = false;
+                        break;
+                    case "2":
+                        logBatalha = "Você usou Ataque Pesado. Causou 25 de dano!";
+                        estadoMenu = "PRINCIPAL";
+                        acao = false;
+                        break;
+                    case "3": estadoMenu = "PRINCIPAL"; break;
+                    default: 
+                        logBatalha = "Ataque inválido";
+                        break;
+                }
+            } else if (estadoMenu.equals("ITEM")) {
+                ui.imprimir("  1. Poção de Vida Pequena");
+                ui.imprimir("  2. Bomba de Fumaça");
+                ui.imprimir("  3. [Voltar]");
+                ui.imprimir("\nEscolha o item (1-3): ");
+
+                String escolha = ui.lerEntrada();
+                switch (escolha) {
+                    case "1":
+                        logBatalha = "Você usou Poção de vida Pequena. Recuperou 20HP!";
+                        vida = Math.min(100, vida + 20);
+                        estadoMenu = "PRINCIPAL";
+                        acao = false;
+                        break;
+                    case "2":
+                        logBatalha = "Você usou Bomba de Fumaça. Os inimigos foram cegados temporariamente!";
+                        estadoMenu = "PRINCIPAL";
+                        acao = false;
+                        break;
+                    case "3":
+                        estadoMenu = "PRINCIPAL";
+                        break;
+                    default:
+                        logBatalha = "Item Inválido!";
+                        break;
+                }
+            }
+        }
+        ui.imprimir("\nFim do combate inicial. Pressione [ENTER] para continuar...");
+        ui.lerEntrada();
     }
 }

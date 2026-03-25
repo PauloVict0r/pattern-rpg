@@ -1,6 +1,7 @@
 package org.pattern.rpg.domain.battle;
 
 import org.pattern.rpg.domain.entity.*;
+import org.pattern.rpg.domain.entity.enemy.*;
 
 import java.util.List;
 

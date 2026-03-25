@@ -1,6 +1,5 @@
 package org.pattern.rpg.domain.entity;
 
-
 import org.pattern.rpg.domain.item.Item;
 import org.pattern.rpg.domain.weapon_strategy.PunchStrategy;
 import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
