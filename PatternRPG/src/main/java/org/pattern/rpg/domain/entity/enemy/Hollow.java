@@ -1,14 +1,13 @@
 package org.pattern.rpg.domain.entity.enemy;
 
+import org.pattern.rpg.domain.entity.Entity;
+
 public class Hollow extends Enemy {
     public Hollow() {
-        this.name = "Hollow";
-        this.health = 15;
-        this.damage = 5;
-    }
-
-    @Override
-    public void attack() {
-        System.out.println(this.name + " ataca desengonçadamente causando " + this.damage + " de dano.");
+        this.setName("Hollow");
+        this.setHP(15);
+        this.setAttack(5);
+        this.setDefense(0);
+        this.setCriticalChance(0.01);
     }
 }
