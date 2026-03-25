@@ -45,4 +45,26 @@ public abstract class WearableDecorator implements Entity, Item {
         return wrappedEntity.receiveDamage(damage);
     }
 
+    public boolean isDead() {
+        return wrappedEntity.isDead();
+    }
+
+    public boolean isAlive() {
+        return wrappedEntity.isAlive();
+    }
+
+    public String getName() {
+        return wrappedEntity.getName();
+    }
+
+    @Override
+    public boolean isEquipable() {
+        return true;
+    }
+
+    @Override
+    public boolean isUsable() {
+        return false;
+    }
+
 }

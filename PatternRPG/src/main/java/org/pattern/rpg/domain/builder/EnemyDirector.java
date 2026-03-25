@@ -1,5 +1,7 @@
 package org.pattern.rpg.domain.builder;
 
+import java.util.Arrays;
+
 public class EnemyDirector {
     public void makeMinion(CreatureBuilder builder) {
         builder.reset();
