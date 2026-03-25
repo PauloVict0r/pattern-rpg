@@ -16,7 +16,7 @@ public class TurnBattle extends Battle {
     private Player player;
     
     // fila de turnos
-    private List<Entity> turnQueue;
+    private List<Creature> turnQueue;
     private int currentTurnIndex;
     
     // construtor
@@ -54,9 +54,9 @@ public class TurnBattle extends Battle {
     }
 
     @Override
-    protected Entity nextTurn() {
+    protected Creature nextTurn() {
         // pega o próximo na fila de turnos
-        Entity current = turnQueue.get(currentTurnIndex);
+        Creature current = turnQueue.get(currentTurnIndex);
         currentTurnIndex = (currentTurnIndex + 1) % turnQueue.size();
 
         // se a entidade estiver morta, pula para o próximo
@@ -69,13 +69,13 @@ public class TurnBattle extends Battle {
     }
 
     @Override
-    protected void executeTurn(Entity entity) {
-        if (entity instanceof Player) {
+    protected void executeTurn(Creature creature) {
+        if (creature instanceof Player) {
             System.out.println("Seu turno! Escolha sua ação");
             // lógica player (por fazer)
         } else {
-            System.out.println("Turno do Inimigo: " + entity.getName());
-            //entity.attack();
+            System.out.println("Turno do Inimigo: " + creature.getName());
+            //creature.attack();
         }
     }
 
