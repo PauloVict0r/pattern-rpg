@@ -5,10 +5,10 @@ import org.pattern.rpg.domain.entity.Entity;
 public class StrongBowStrategy extends Weapon {
 
     @Override
-    public int attack(Entity target) {
-        int damage = this.weaponDamage();
+    public int attack(Entity target, int damageStat, double critStat) {
+        int damage = this.weaponDamage() + damageStat;
 
-        if (Math.random() < target.getCriticalChance()) {
+        if (Math.random() < critStat) {
             damage *= 3;
         }
 

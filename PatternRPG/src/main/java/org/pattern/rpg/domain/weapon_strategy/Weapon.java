@@ -6,8 +6,8 @@ import org.pattern.rpg.domain.item.Item;
 public abstract class Weapon implements Item, WeaponStrategy {
 
     @Override
-    public int attack(Entity target) {
-        return target.receiveDamage(this.weaponDamage());
+    public int attack(Entity target, int damageStat, double critStat) {
+        return target.receiveDamage(this.weaponDamage() + damageStat);
     }
 
     @Override

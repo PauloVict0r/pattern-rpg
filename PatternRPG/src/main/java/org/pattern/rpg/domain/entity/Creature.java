@@ -51,7 +51,7 @@ public abstract class Creature implements Entity {
     }
 
     public int attack(Entity target) {
-        return this.weapon.attack(target);
+        return this.weapon.attack(target, getAttack(), getCriticalChance());
     }
 
     public int receiveDamage(int damage) {

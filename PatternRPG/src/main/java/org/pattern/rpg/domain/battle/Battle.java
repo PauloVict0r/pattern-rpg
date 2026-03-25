@@ -1,6 +1,7 @@
 package org.pattern.rpg.domain.battle;
 
 import org.pattern.rpg.domain.entity.*;
+import org.pattern.rpg.domain.entity.enemy.Enemy;
 
 import java.util.List;
 
@@ -8,7 +9,6 @@ public abstract class Battle {
 
     protected int battleState; //0: em andamento; 1: vitória; 2: derrota
 
-    //TEMPLATE METHOD
     public final void startBattle() {
         setup();
 
