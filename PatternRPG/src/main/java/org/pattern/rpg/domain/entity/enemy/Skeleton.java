@@ -1,14 +1,13 @@
 package org.pattern.rpg.domain.entity.enemy;
 
+import org.pattern.rpg.domain.entity.Entity;
+
 public class Skeleton extends Enemy {
     public Skeleton() {
-        this.name = "Esqueleto Arqueiro";
-        this.health = 20;
-        this.damage = 8;
-    }
-
-    @Override
-    public void attack() {
-        System.out.println(this.name + " atira uma flecha causando " + this.damage + " de dano!");
+        this.setName("Esqueleto Arqueiro");
+        this.setHP(20);
+        this.setAttack(8);
+        this.setDefense(3);
+        this.setCriticalChance(0.10);
     }
 }

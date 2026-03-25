@@ -35,6 +35,12 @@ public abstract class Creature implements Entity {
         }
     }
 
+    public void increaseHP(int value) {
+        if (value > 0) {
+            this.hp += value;
+        }
+    }
+
     public int getDefense() {
         return this.defense;
     }
@@ -44,7 +50,7 @@ public abstract class Creature implements Entity {
     }
 
     public int attack(Entity target) {
-        return this.weapon.attack(target);
+        return this.weapon.attack(target, getAttack(), getCriticalChance());
     }
 
     public int receiveDamage(int damage) {
@@ -65,12 +71,33 @@ public abstract class Creature implements Entity {
         return this.name;
     }
 
+    public void setHP(int hp) {
+        this.hp = hp;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setCriticalChance(double criticalChance) {
+        this.criticalChance = criticalChance;
+    }
+
+    public void setInventory(List<Item> inventory) {
+        this.inventory = inventory;
+    }
+
+    @Override
     public boolean isAlive() {
         return this.hp > 0;
     }
 
+    @Override
     public boolean isDead() {
         return this.hp <= 0;
     }
-
 }
