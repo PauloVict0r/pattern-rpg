@@ -1,7 +1,6 @@
 package org.pattern.rpg.domain.battle;
 
-import org.pattern.rpg.domain.entity.Entity;
-import org.pattern.rpg.domain.entity.enemy.Enemy;
+import org.pattern.rpg.domain.entity.*;
 
 import java.util.List;
 
@@ -14,16 +13,16 @@ public abstract class Battle {
         setup();
 
         while (!isOver()) {
-            Entity currentEntity = nextTurn();
-            executeTurn(currentEntity);
+            Creature currentCreature = nextTurn();
+            executeTurn(currentCreature);
         }
 
         finish();
     }
 
     protected abstract void setup();
-    protected abstract Entity nextTurn();
-    protected abstract void executeTurn(Entity entity);
+    protected abstract Creature nextTurn();
+    protected abstract void executeTurn(Creature creature);
     protected abstract boolean isOver();
     protected abstract void finish();
     protected abstract List<Enemy> createEnemies();
