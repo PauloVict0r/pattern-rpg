@@ -36,6 +36,12 @@ public abstract class Creature implements Entity {
         }
     }
 
+    public void increaseHP(int value) {
+        if (value > 0) {
+            this.hp += value;
+        }
+    }
+
     public int getDefense() {
         return this.defense;
     }
@@ -64,5 +70,21 @@ public abstract class Creature implements Entity {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setHP(int hp) {
+        this.hp = hp;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setCriticalChance(double criticalChance) {
+        this.criticalChance = criticalChance;
     }
 }

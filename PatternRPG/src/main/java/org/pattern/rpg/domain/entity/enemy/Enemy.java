@@ -1,30 +1,26 @@
 package org.pattern.rpg.domain.entity.enemy;
 
-public abstract class Enemy {
-    protected String name;
-    protected int health;
-    protected int damage;
+import org.pattern.rpg.domain.entity.Creature;
 
-    public String getName() { return name; }
-    public int getHealth() { return health; }
-    public int getDamage() { return damage; }
+public abstract class Enemy extends Creature {
+
+    public int getHealth() { return this.getHP(); }
+    public int getDamage() { return this.getAttack(); }
 
     public void takeDamage(int amount) {
-        this.health -= amount;
-        System.out.println(this.name + " recebeu " + amount + " de dano. Vida restante: " + this.health);
+        this.receiveDamage(amount);
+        System.out.println(this.getName() + " recebeu " + amount + " de dano. Vida restante: " + this.getHP());
         
-        if (this.health <= 0) {
+        if (this.isDead()) {
             die();
         }
     }
 
     public void die() {
-        System.out.println(this.name + " foi derrotado!");
+        System.out.println(this.getName() + " foi derrotado!");
     }
 
     public boolean isDead() {
-        return this.health <= 0;
+        return this.getHP() <= 0;
     }
-
-    public abstract void attack();
 }
