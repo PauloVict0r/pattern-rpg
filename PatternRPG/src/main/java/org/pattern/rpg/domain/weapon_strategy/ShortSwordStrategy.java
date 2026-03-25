@@ -2,20 +2,20 @@ package org.pattern.rpg.domain.weapon_strategy;
 
 import org.pattern.rpg.domain.entity.Entity;
 
-public class PunchStrategy extends Weapon {
+public class ShortSwordStrategy extends Weapon {
 
     @Override
     public int weaponDamage() {
-        return 1;
+        return 7;
     }
 
     @Override
     public String getName() {
-        return "Punhos";
+        return "Espada Curta";
     }
 
     @Override
     public String getDescription() {
-        return "Seus punhos";
+        return "Uma espada simples, leve e fácil de manusear.";
     }
 }
