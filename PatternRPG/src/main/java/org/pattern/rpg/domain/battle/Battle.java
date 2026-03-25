@@ -1,7 +1,11 @@
 package org.pattern.rpg.domain.battle;
 
 import org.pattern.rpg.domain.entity.*;
+<<<<<<< HEAD
+import org.pattern.rpg.domain.entity.enemy.*;
+=======
 import org.pattern.rpg.domain.entity.enemy.Enemy;
+>>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
 
 import java.util.List;
 

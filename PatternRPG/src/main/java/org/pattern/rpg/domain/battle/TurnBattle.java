@@ -3,10 +3,13 @@ package org.pattern.rpg.domain.battle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.domain.factory.*;
 import org.pattern.rpg.domain.entity.*;
+import org.pattern.rpg.presentation.menu.Menu;
+import org.pattern.rpg.presentation.ui.ConsoleUI;
 
 
 public class TurnBattle extends Battle {
@@ -14,13 +17,18 @@ public class TurnBattle extends Battle {
     // lista de inimigos e player
     private List<Enemy> enemies;
     private Player player;
+    private String logBatalha;
+    private ConsoleUI ui;
+    private Scanner scanner;
     
     // fila de turnos
     private List<Creature> turnQueue;
     private int currentTurnIndex;
     
     // construtor
-    public TurnBattle(Player player) {
+    public TurnBattle(Player player, Scanner scanner, ConsoleUI ui) {
+        this.scanner = scanner;
+        this.ui = ui;
         this.player = player;
     }
 
@@ -50,7 +58,7 @@ public class TurnBattle extends Battle {
         this.turnQueue.addAll(enemies);
         this.currentTurnIndex = 0;
 
-        System.out.println("Batalha iniciada!");
+        logBatalha = "Batalha iniciada!";
     }
 
     @Override
@@ -71,10 +79,11 @@ public class TurnBattle extends Battle {
     @Override
     protected void executeTurn(Creature creature) {
         if (creature instanceof Player) {
-            System.out.println("Seu turno! Escolha sua ação");
+            logBatalha = "Seu turno! Escolha sua ação";
+            Menu.Batalha(player, enemies, logBatalha, ui);
             // lógica player (por fazer)
         } else {
-            System.out.println("Turno do Inimigo: " + creature.getName());
+            logBatalha = "Turno do Inimigo: " + creature.getName();
             //creature.attack();
         }
     }
@@ -107,9 +116,9 @@ public class TurnBattle extends Battle {
     @Override
     protected void finish() {
         if (battleState == 1) {
-            System.out.println("Vitória");
+            logBatalha = "Vitória";
         } else if (battleState == 2) {
-            System.out.println("Derrota");
+            logBatalha = "Derrota";
         }
     }
 }

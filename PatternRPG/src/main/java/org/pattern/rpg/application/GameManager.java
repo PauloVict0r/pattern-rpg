@@ -4,8 +4,13 @@ import org.pattern.rpg.domain.entity.Save;
 import org.pattern.rpg.infrastructure.database.SaveRepository;
 import org.pattern.rpg.presentation.menu.Menu;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
+<<<<<<< HEAD
+import org.pattern.rpg.domain.battle.*;
+import org.pattern.rpg.domain.entity.*;
+=======
 
 import java.util.List;
+>>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
 import java.util.Scanner;
 
 public class GameManager {
@@ -13,6 +18,26 @@ public class GameManager {
     private Scanner scanner;
     private ConsoleUI ui;
     private Menu menu;
+<<<<<<< HEAD
+    private InventoryManager inventoryManager; // Adicionado
+    private boolean jogoRodando;
+    private TurnBattle battle;
+    private Player player;
+
+    public GameManager() {
+        this.scanner = new Scanner(System.in);
+        this.player = new Player();
+        this.ui = new ConsoleUI(scanner);
+        this.menu = new Menu(ui, this);
+        this.inventoryManager = new InventoryManager(ui); // Inicializado
+        this.battle = new TurnBattle(player, scanner, ui);
+    }
+
+    public void iniciarAplicacao() {
+        this.jogoRodando = true;
+        while (jogoRodando) {
+            menu.exibirMenuPrincipal(ui);
+=======
     private BattleManager battleManager;
     private InventoryManager inventoryManager;
     private SaveRepository saveRepository;
@@ -39,6 +64,7 @@ public class GameManager {
         isRunning = true;
         while (isRunning) {
             menu.showMainMenu();
+>>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
         }
     }
 
@@ -46,6 +72,13 @@ public class GameManager {
         isRunning = false;
     }
 
+<<<<<<< HEAD
+    public void orquestrarNovoJogo(String nomeJogador) {
+        battle.startBattle();
+        
+        // Chamando o Fim de Jogo logo após a batalha, exatamente como no seu código original
+        menu.exibirFimDeJogo(player.getName(), ui);
+=======
     public void startNewGame(String name, String equipment) {
 
         currentFloor = 1;
@@ -58,6 +91,7 @@ public class GameManager {
         currentScore = 250;
 
         menu.showGameOver(name, equipment);
+>>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
     }
 
     public void continueGame() {
