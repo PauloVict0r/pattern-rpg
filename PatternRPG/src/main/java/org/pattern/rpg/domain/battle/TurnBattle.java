@@ -26,27 +26,41 @@ public class TurnBattle extends Battle {
     // Arma inicial do player (string placeholder até integrar WeaponStrategy)
     private String nomeArmaPlayer;
 
-    // Flag de fuga
-    private boolean fugiuDaBatalha;
+    // Andar atual da masmorra — controla a dificuldade do spawn
+    private int andarAtual;
+
+    // Flag de rendição/fuga
+    private boolean rendeu;
 
     // Log de combate exibido no HUD
     private String logBatalha;
 
-    public TurnBattle(Player player, Menu menu, String nomeArmaPlayer) {
+    public TurnBattle(Player player, Menu menu, String nomeArmaPlayer, int andarAtual) {
         this.player = player;
         this.menu = menu;
         this.nomeArmaPlayer = nomeArmaPlayer;
+        this.andarAtual = andarAtual;
         this.logBatalha = "Um grupo de inimigos bloqueia seu caminho!";
     }
 
     @Override
     protected List<Enemy> createEnemies() {
-        List<String> tipos = List.of("goblin", "wolf", "skeleton", "vampire", "dragon", "hollow");
+        // Inimigos comuns: disponíveis desde o andar 1
+        List<String> tiposComuns = new java.util.ArrayList<>(java.util.Arrays.asList(
+                "goblin", "wolf", "skeleton", "hollow"
+        ));
+
+        // Inimigos de elite: só aparecem a partir do andar 6
+        if (andarAtual >= 6) {
+            tiposComuns.add("vampire");
+            tiposComuns.add("dragon");
+        }
+
         List<Enemy> spawnados = new ArrayList<>();
         int numInimigos = new Random().nextInt(3) + 1; // 1 a 3
 
         for (int i = 0; i < numInimigos; i++) {
-            String tipo = tipos.get(new Random().nextInt(tipos.size()));
+            String tipo = tiposComuns.get(new Random().nextInt(tiposComuns.size()));
             spawnados.add(EnemyFactory.createEnemy(tipo));
         }
         return spawnados;
@@ -55,7 +69,7 @@ public class TurnBattle extends Battle {
     @Override
     protected void setup() {
         this.battleState = 0; // em andamento
-        this.fugiuDaBatalha = false;
+        this.rendeu = false;
         this.enemies = createEnemies();
 
         this.turnQueue = new ArrayList<>();
@@ -104,8 +118,8 @@ public class TurnBattle extends Battle {
                     case "1": estadoMenu = "ATACAR"; break;
                     case "2": estadoMenu = "ITEM";   break;
                     case "3":
-                        logBatalha = player.getName() + " fugiu covardemente...";
-                        this.fugiuDaBatalha = true;
+                        logBatalha = player.getName() + " se rendeu e recuou...";
+                        this.rendeu = true;
                         acaoRealizada = true;
                         break;
                     default:
@@ -182,8 +196,8 @@ public class TurnBattle extends Battle {
     // -------------------------------------------------------------------------
     @Override
     protected boolean isOver() {
-        if (fugiuDaBatalha) {
-            this.battleState = 3; // fuga
+        if (rendeu) {
+            this.battleState = 3; // fuga/rendição
             return true;
         }
 
@@ -203,12 +217,13 @@ public class TurnBattle extends Battle {
 
     @Override
     protected void finish() {
-        if (battleState == 3) {
-            menu.exibirResultadoBatalha(false, player.getName() + " (fugiu)");
-        } else {
-            boolean vitoria = (battleState == 1);
-            menu.exibirResultadoBatalha(vitoria, player.getName());
+        if (battleState == 1) {
+            menu.exibirResultadoBatalha(true, player.getName());
+        } else if (battleState == 3) {
+            // rendição: apenas informa, GameManager cuidará do fim de jogo
+            menu.exibirResultadoBatalha(false, player.getName() + " (se rendeu)");
         }
+        // battleState == 2 (derrota do player): GameManager exibe o fim de jogo
     }
 
     // -------------------------------------------------------------------------
@@ -221,8 +236,13 @@ public class TurnBattle extends Battle {
         return null;
     }
 
-    /** Expõe o estado final: 0 = em andamento, 1 = vitória, 2 = derrota. */
-    public int getBattleState() {
+    /** Expõe o estado final: 0 = em andamento, 1 = vitória, 2 = derrota, 3 = rendição. */
+    public int getEstadoBatalha() {
         return battleState;
+    }
+
+    /** Retorna true se o player se rendeu/fugiu neste encontro. */
+    public boolean isRendido() {
+        return rendeu;
     }
 }

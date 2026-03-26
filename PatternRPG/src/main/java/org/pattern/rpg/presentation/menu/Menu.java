@@ -177,7 +177,35 @@ public class Menu {
         ui.limparTerminal();
     }
 
-    public void exibirFimDeJogo(String nomeJogador, String equipamentoEscolhido) {
+    // =========================================================================
+    // UI ENTRE ANDARES
+    // =========================================================================
+
+    /**
+     * Exibido após cada vitória de encontro, antes de iniciar o próximo andar.
+     */
+    public void exibirEntreAndares(int andarConcluido, int pontuacaoAtual, boolean descansou) {
+        ui.limparTerminal();
+        ui.imprimir("=================================");
+        ui.imprimir("       ANDAR  " + andarConcluido + "  CONCLUÍDO!      ");
+        ui.imprimir("=================================");
+        ui.imprimir(String.format("  Pontuação acumulada: %-8d", pontuacaoAtual));
+        ui.imprimir("---------------------------------");
+        if (descansou) {
+            ui.imprimir("  *** DESCANSO! HP restaurado! ***");
+            ui.imprimir("---------------------------------");
+        }
+        ui.imprimir("  Próximo andar: " + (andarConcluido + 1));
+        if (andarConcluido + 1 == 6) {
+            ui.imprimir("  ⚠ Inimigos mais poderosos se aproximam!");
+        }
+        ui.imprimir("=================================");
+        ui.imprimir("\n Pressione [ENTER] para descer...");
+        ui.lerEntrada();
+        ui.limparTerminal();
+    }
+
+    public void exibirFimDeJogo(String nomeJogador, String equipamentoEscolhido, int andarAtual) {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            FIM DE JOGO           ");
@@ -186,7 +214,7 @@ public class Menu {
         // FUTURAMENTE: Os dados virão da entidade Player
         ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", nomeJogador));
         ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", "100"));
+        ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", andarAtual));
         ui.imprimir("=================================");
 
         ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");

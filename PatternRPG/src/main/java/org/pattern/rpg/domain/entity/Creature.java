@@ -9,6 +9,7 @@ import java.util.List;
 
 public abstract class Creature implements Entity {
     private int hp;
+    private int hpMaximo;
     private int defense;
     private int attack;
     private double criticalChance;
@@ -54,9 +55,9 @@ public abstract class Creature implements Entity {
         return damage_taken;
     }
 
-    /** Restaura HP pelo valor informado. Não ultrapassa o HP atual máximo (sem cap fixo por ora). */
+    /** Restaura HP pelo valor informado, respeitando o HP máximo. */
     public void heal(int amount) {
-        this.hp += amount;
+        this.hp = Math.min(this.hp + amount, this.hpMaximo > 0 ? this.hpMaximo : this.hp + amount);
     }
 
     public void setWeapon(WeaponStrategy weapon) {
@@ -69,6 +70,25 @@ public abstract class Creature implements Entity {
 
     public void setHp(int hp) {
         this.hp = hp;
+        if (hp > this.hpMaximo) {
+            this.hpMaximo = hp; // sincroniza o máximo na inicialização
+        }
+    }
+
+    /** Restaura o HP completamente ao máximo. Usado a cada 5 andares. */
+    public void restaurarHp() {
+        this.hp = this.hpMaximo;
+    }
+
+    /**
+     * Incremento leve de status a cada andar vencido.
+     * +5 HP máximo, +1 ataque, +0 defesa (expansão futura).
+     */
+    public void incrementarStatus() {
+        this.hpMaximo += 5;
+        this.attack   += 1;
+        // Cura parcial proporcional ao bônus de HP para não deixar o player fraco logo após
+        this.hp = Math.min(this.hp + 5, this.hpMaximo);
     }
 
     public void setAttack(int attack) {
