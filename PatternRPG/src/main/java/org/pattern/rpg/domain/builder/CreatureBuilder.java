@@ -10,4 +10,10 @@ public interface CreatureBuilder {
     void setAttack(int attack);
     void setCriticalChance(double criticalChance);
     void setWeapon(WeaponStrategy weapon);
+
+    String getName();
+    int getHP();
+    int getDefense();
+    int getAttack();
+    double getCriticalChance();
 }

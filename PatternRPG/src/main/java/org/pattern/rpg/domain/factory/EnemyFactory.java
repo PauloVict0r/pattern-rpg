@@ -18,23 +18,40 @@ public class EnemyFactory {
         switch (type.toLowerCase()) {
             case "skeleton":
             case "esqueleto":
-                return new Skeleton();
+                return createWithBuilder(Skeleton::new);
             case "goblin":
-                return new Goblin();
+                return createWithBuilder(Goblin::new);
             case "vampire":
             case "vampiro":
-                return new Vampire();
+                return createWithBuilder(Vampire::new);
             case "wolf":
             case "lobo":
-                return new Wolf();
+                return createWithBuilder(Wolf::new);
             case "dragon":
             case "dragao":
             case "dragão":
-                return new Dragon();
+                return createWithBuilder(Dragon::new);
             case "hollow":
-                return new Hollow();
+                return createWithBuilder(Hollow::new);
             default:
                 return new NullEnemy();
         }
+    }
+
+    private static Enemy createWithBuilder(java.util.function.Supplier<Enemy> supplier) {
+        org.pattern.rpg.domain.builder.EnemyBuilder builder = new org.pattern.rpg.domain.builder.EnemyBuilder(supplier);
+        
+        double chance = Math.random();
+        org.pattern.rpg.domain.builder.EnemyDirector director = new org.pattern.rpg.domain.builder.EnemyDirector();
+        
+        if (chance <= 0.05) {
+            director.makeBoss(builder);
+        } else if (chance <= 0.20) {
+            director.makeChampion(builder);
+        } else if (chance <= 0.50) {
+            director.makeMinion(builder);
+        }
+
+        return builder.getResult();
     }
 }

@@ -36,7 +36,21 @@ public class EnemyBuilder implements CreatureBuilder {
 
     @Override
     public void setWeapon(WeaponStrategy weapon) { this.enemy.setWeapon(weapon); }
-    
+    @Override
+    public String getName() { return this.enemy.getName(); }
+
+    @Override
+    public int getHP() { return this.enemy.getHP(); }
+
+    @Override
+    public int getDefense() { return this.enemy.getDefense(); }
+
+    @Override
+    public int getAttack() { return this.enemy.getAttack(); }
+
+    @Override
+    public double getCriticalChance() { return this.enemy.getCriticalChance(); }
+
     // Retorna o Enemy construído
     public Enemy getResult() {
         Enemy finishedEnemy = this.enemy;
