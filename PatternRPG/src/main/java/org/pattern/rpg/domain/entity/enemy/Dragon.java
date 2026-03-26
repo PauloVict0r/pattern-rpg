@@ -2,9 +2,7 @@ package org.pattern.rpg.domain.entity.enemy;
 
 public class Dragon extends Enemy {
     public Dragon() {
-        this.name = "Dragão Ancestral";
-        this.health = 200;
-        this.damage = 50;
+        initStats("Dragão Ancestral", 200, 50);
     }
 
     @Override

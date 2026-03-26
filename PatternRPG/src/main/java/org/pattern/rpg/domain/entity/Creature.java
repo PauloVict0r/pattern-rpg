@@ -54,12 +54,29 @@ public abstract class Creature implements Entity {
         return damage_taken;
     }
 
+    /** Restaura HP pelo valor informado. Não ultrapassa o HP atual máximo (sem cap fixo por ora). */
+    public void heal(int amount) {
+        this.hp += amount;
+    }
+
     public void setWeapon(WeaponStrategy weapon) {
         this.weapon = weapon;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 
     public String getName() {

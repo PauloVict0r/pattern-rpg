@@ -2,9 +2,7 @@ package org.pattern.rpg.domain.entity.enemy;
 
 public class Goblin extends Enemy{
     public Goblin() {
-        this.name = "Goblin Sorrateiro";
-        this.health = 30;
-        this.damage = 5;
+        initStats("Goblin Sorrateiro", 30, 5);
     }
 
     @Override

@@ -2,9 +2,7 @@ package org.pattern.rpg.domain.entity.enemy;
 
 public class Skeleton extends Enemy {
     public Skeleton() {
-        this.name = "Esqueleto Arqueiro";
-        this.health = 20;
-        this.damage = 8;
+        initStats("Esqueleto Arqueiro", 20, 8);
     }
 
     @Override

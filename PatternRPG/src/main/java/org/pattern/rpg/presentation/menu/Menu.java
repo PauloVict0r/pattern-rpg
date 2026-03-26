@@ -1,7 +1,11 @@
 package org.pattern.rpg.presentation.menu;
 
 import org.pattern.rpg.application.GameManager;
+import org.pattern.rpg.domain.entity.Entity;
+import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
+
+import java.util.List;
 import java.util.Random;
 
 public class Menu {
@@ -12,6 +16,10 @@ public class Menu {
         this.ui = ui;
         this.facade = facade;
     }
+
+    // =========================================================================
+    // MENU PRINCIPAL DO JOGO
+    // =========================================================================
 
     public void exibirMenuPrincipal() {
         ui.limparTerminal();
@@ -33,7 +41,6 @@ public class Menu {
                 case 1:
                     ui.imprimir("=> Opção escolhida: CONTINUAR o jogo.");
                     ui.pausar(2000);
-                    // FUTURAMENTE: Aqui chamaremos o SaveRepository.java para buscar o save no Banco de Dados
                     facade.continuarJogo();
                     break;
                 case 2:
@@ -91,7 +98,7 @@ public class Menu {
         Random random = new Random();
         int item1 = random.nextInt(equipamentos.length);
         int item2 = random.nextInt(equipamentos.length);
-        while(item1 == item2){
+        while (item1 == item2) {
             item2 = random.nextInt(equipamentos.length);
         }
         int item3 = random.nextInt(equipamentos.length);
@@ -119,20 +126,20 @@ public class Menu {
 
             try {
                 int escolha = Integer.parseInt(entrada);
-                if(escolha == 1){
+                if (escolha == 1) {
                     equipamentoEscolhido = equipamentos[item1];
                     escolhendo = false;
-                } else if (escolha == 2){
+                } else if (escolha == 2) {
                     equipamentoEscolhido = equipamentos[item2];
                     escolhendo = false;
-                } else if (escolha == 3){
+                } else if (escolha == 3) {
                     equipamentoEscolhido = equipamentos[item3];
                     escolhendo = false;
                 } else {
                     ui.imprimir("Escolha inválida. Os deuses exigem um número entre 1 e 3.");
                     ui.pausar(2000);
                 }
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 ui.imprimir("=> Entrada inválida. Digite apenas números.");
                 ui.pausar(2000);
             }
@@ -175,7 +182,7 @@ public class Menu {
         ui.imprimir("=================================");
         ui.imprimir("            FIM DE JOGO           ");
         ui.imprimir("=================================");
-        
+
         // FUTURAMENTE: Os dados virão da entidade Player
         ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", nomeJogador));
         ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
@@ -183,6 +190,84 @@ public class Menu {
         ui.imprimir("=================================");
 
         ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");
+        ui.lerEntrada();
+        ui.limparTerminal();
+    }
+
+    // =========================================================================
+    // UI DE BATALHA — centralizada aqui conforme responsabilidade de apresentação
+    // =========================================================================
+
+    /**
+     * Exibe o HUD completo da batalha: status do player, dos inimigos e o log de combate.
+     */
+    public void exibirTelaBatalha(Entity player, List<Enemy> enemies, String logBatalha) {
+        ui.limparTerminal();
+        ui.imprimir("=======================================================");
+
+        StringBuilder cabecalhoInimigos = new StringBuilder();
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy e = enemies.get(i);
+            String info = e.getName() + " (HP: " + (e.isDead() ? "MORTO" : e.getHealth()) + ")";
+            cabecalhoInimigos.append(info);
+            if (i < enemies.size() - 1) cabecalhoInimigos.append(" | ");
+        }
+
+        ui.imprimir(String.format("%-25s %25s", "HP: " + player.getHP(), cabecalhoInimigos.toString()));
+        ui.imprimir("-------------------------------------------------------");
+
+        int espacosEsquerda = Math.max(0, (55 - logBatalha.length()) / 2);
+        ui.imprimir(" ".repeat(espacosEsquerda) + logBatalha);
+        ui.imprimir("-------------------------------------------------------");
+    }
+
+    /**
+     * Menu principal de ação durante o combate. Retorna a escolha do jogador ("1"-"3").
+     */
+    public String exibirMenuPrincipalBatalha(String nomeJogador) {
+        ui.imprimir("  1. Atacar      |  3. Fugir");
+        ui.imprimir("  2. Usar item   |");
+        ui.imprimir("\nO que " + nomeJogador + " fará? (1-3): ");
+        return ui.lerEntrada();
+    }
+
+    /**
+     * Submenu de ataque. Retorna a escolha do jogador ("1"-"3").
+     */
+    public String exibirMenuAtacar(String nomeArma) {
+        ui.imprimir("  1. Ataque Rápido  (" + nomeArma + ")");
+        ui.imprimir("  2. Ataque Pesado  (" + nomeArma + ")");
+        ui.imprimir("  3. [Voltar]");
+        ui.imprimir("\nEscolha seu ataque (1-3): ");
+        return ui.lerEntrada();
+    }
+
+    /**
+     * Submenu de itens. Retorna a escolha do jogador ("1"-"3").
+     */
+    public String exibirMenuItens() {
+        ui.imprimir("  1. Poção de Vida Pequena");
+        ui.imprimir("  2. Bomba de Fumaça");
+        ui.imprimir("  3. [Voltar]");
+        ui.imprimir("\nEscolha o item (1-3): ");
+        return ui.lerEntrada();
+    }
+
+    /**
+     * Exibe o resultado final da batalha (vitória ou derrota) e aguarda ENTER.
+     */
+    public void exibirResultadoBatalha(boolean vitoria, String nomeJogador) {
+        ui.limparTerminal();
+        ui.imprimir("=======================================================");
+        if (vitoria) {
+            ui.imprimir("                    *** VITÓRIA! ***");
+            ui.imprimir("  " + nomeJogador + " venceu todos os inimigos!");
+        } else {
+            ui.imprimir("                    *** DERROTA... ***");
+            ui.imprimir("  " + nomeJogador + " foi derrotado(a)...");
+        }
+        ui.imprimir("=======================================================");
+        ui.imprimir("\nPressione [ENTER] para continuar...");
         ui.lerEntrada();
         ui.limparTerminal();
     }

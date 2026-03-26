@@ -2,9 +2,7 @@ package org.pattern.rpg.domain.entity.enemy;
 
 public class NullEnemy extends Enemy {
     public NullEnemy() {
-        this.name = "Inimigo Inexistente";
-        this.health = 0;
-        this.damage = 0;
+        initStats("Inimigo Inexistente", 0, 0);
     }
 
     @Override

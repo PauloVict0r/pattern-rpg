@@ -2,9 +2,7 @@ package org.pattern.rpg.domain.entity.enemy;
 
 public class Hollow extends Enemy {
     public Hollow() {
-        this.name = "Hollow";
-        this.health = 15;
-        this.damage = 5;
+        initStats("Hollow", 15, 5);
     }
 
     @Override
