@@ -17,6 +17,10 @@ public abstract class WearableDecorator implements Entity, Item {
         return bonus;
     }
 
+    public Entity getWrappedEntity() {
+        return wrappedEntity;
+    }
+
     @Override
     public int getAttack() {
         return wrappedEntity.getAttack() + bonus.attack();

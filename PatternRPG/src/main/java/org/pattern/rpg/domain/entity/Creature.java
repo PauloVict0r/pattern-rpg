@@ -123,4 +123,8 @@ public abstract class Creature implements Entity {
         this.inventory = inventory;
     }
 
+    public List<Item> getInventory() {
+        return this.inventory;
+    }
+
 }

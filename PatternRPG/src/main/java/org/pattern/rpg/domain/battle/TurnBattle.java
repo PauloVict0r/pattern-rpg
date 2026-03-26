@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.pattern.rpg.domain.entity.Player;
 import org.pattern.rpg.domain.entity.Entity;
+import org.pattern.rpg.domain.item.Item;
 import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.domain.factory.EnemyFactory;
 import org.pattern.rpg.presentation.menu.Menu;
@@ -167,22 +168,26 @@ public class TurnBattle extends Battle {
                 }
 
             } else if (estadoMenu.equals("ITEM")) {
-                String escolha = menu.exibirMenuItens();
-                switch (escolha) {
-                    case "1": // Poção de Vida Pequena
-                        // FUTURAMENTE: remover item do inventário real do Player
-                        int cura = 20;
-                        player.heal(cura);
-                        logBatalha = player.getName() + " usou Poção de Vida Pequena. Recuperou " + cura + " HP!";
-                        acaoRealizada = true;
-                        break;
-                    case "2": // Bomba de Fumaça
-                        logBatalha = player.getName() + " usou Bomba de Fumaça. Os inimigos foram cegados!";
-                        acaoRealizada = true;
-                        break;
-                    case "3": estadoMenu = "PRINCIPAL"; break;
-                    default:
-                        logBatalha = "Item inválido!";
+                List<Item> inventario = player.getInventory();
+                String escolha = menu.exibirMenuItens(inventario);
+                
+                try {
+                    int idx = Integer.parseInt(escolha) - 1;
+                    if (idx >= 0 && idx < inventario.size()) {
+                        Item itemUsado = inventario.get(idx);
+                        if (itemUsado instanceof org.pattern.rpg.domain.item.usable.Usable) {
+                            ((org.pattern.rpg.domain.item.usable.Usable) itemUsado).use(player);
+                            logBatalha = player.getName() + " usou " + itemUsado.getName() + "!";
+                            inventario.remove(idx); // Remove após usar
+                            acaoRealizada = true;
+                        } else {
+                            logBatalha = "Este item não pode ser usado agora.";
+                        }
+                    } else {
+                        estadoMenu = "PRINCIPAL"; // Voltou ou opção inválida
+                    }
+                } catch (NumberFormatException e) {
+                    estadoMenu = "PRINCIPAL";
                 }
             }
         }

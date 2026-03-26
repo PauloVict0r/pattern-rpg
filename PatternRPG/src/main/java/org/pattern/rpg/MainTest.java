@@ -12,7 +12,7 @@ public class MainTest {
         System.out.println("--- TESTE DE BANCO DE DADOS ---");
         
         Player testPlayer = new Player("Teste_" + System.currentTimeMillis());
-        repo.saveGame(testPlayer, 1, "Espada de Teste");
+        repo.saveGame(testPlayer, 1, "Espada de Teste", "Nenhuma");
         
         List<SaveRepository.SaveData> saves = repo.getAllSaves();
         System.out.println("Total de saves encontrados: " + saves.size());

@@ -323,13 +323,19 @@ public class Menu {
     }
 
     /**
-     * Submenu de itens. Retorna a escolha do jogador ("1"-"3").
+     * Submenu de itens dinâmico baseado no inventário real do Player.
      */
-    public String exibirMenuItens() {
-        ui.imprimir("  1. Poção de Vida Pequena");
-        ui.imprimir("  2. Bomba de Fumaça");
-        ui.imprimir("  3. [Voltar]");
-        ui.imprimir("\nEscolha o item (1-3): ");
+    public String exibirMenuItens(List<org.pattern.rpg.domain.item.Item> itens) {
+        ui.imprimir("\n--- SEU INVENTÁRIO ---");
+        if (itens == null || itens.isEmpty()) {
+            ui.imprimir("  (Vazio)");
+        } else {
+            for (int i = 0; i < itens.size(); i++) {
+                ui.imprimir("  " + (i + 1) + ". " + itens.get(i).getName());
+            }
+        }
+        ui.imprimir("  " + ( (itens != null ? itens.size() : 0) + 1) + ". [Voltar]");
+        ui.imprimir("\nEscolha o item: ");
         return ui.lerEntrada();
     }
 
