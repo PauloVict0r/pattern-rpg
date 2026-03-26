@@ -19,4 +19,8 @@ public abstract class Weapon implements Item, WeaponStrategy {
     public boolean isUsable() {
         return false;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

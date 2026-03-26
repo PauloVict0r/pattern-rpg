@@ -15,6 +15,18 @@ public class EnemyDirector {
 
     public void makeBoss(CreatureBuilder builder) {
         applyModifier(builder, "(Chefe)", 3.0, new DragonBladeStrategy());
+<<<<<<< HEAD
+    }
+
+    private void applyModifier(CreatureBuilder builder, String suffix, double multiplier, org.pattern.rpg.domain.weapon_strategy.WeaponStrategy weapon) {
+        builder.reset();
+        builder.setName(builder.getName() + " " + suffix);
+        builder.setHP((int)(builder.getHP() * multiplier));
+        builder.setAttack((int)(builder.getAttack() * multiplier));
+        builder.setDefense((int)(builder.getDefense() * multiplier));
+        builder.setWeapon(weapon);
+=======
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
     }
 
     private void applyModifier(CreatureBuilder builder, String suffix, double multiplier, org.pattern.rpg.domain.weapon_strategy.WeaponStrategy weapon) {

@@ -16,4 +16,8 @@ public interface CreatureBuilder {
     int getDefense();
     int getAttack();
     double getCriticalChance();
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

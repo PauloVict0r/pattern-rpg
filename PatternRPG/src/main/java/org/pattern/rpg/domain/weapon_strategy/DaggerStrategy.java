@@ -29,4 +29,8 @@ public class DaggerStrategy extends Weapon {
     public String getDescription() {
         return "Pequena e veloz, ideal para ataques rápidos e precisos.";
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

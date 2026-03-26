@@ -18,4 +18,8 @@ public class BowStrategy extends Weapon {
     public String getDescription() {
         return "Um arco de madeira fraca";
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

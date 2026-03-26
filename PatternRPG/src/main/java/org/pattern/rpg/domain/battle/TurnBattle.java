@@ -5,18 +5,25 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import org.pattern.rpg.domain.entity.Player;
+import org.pattern.rpg.domain.entity.Entity;
 import org.pattern.rpg.domain.entity.enemy.Enemy;
+<<<<<<< HEAD
 import org.pattern.rpg.domain.factory.*;
 import org.pattern.rpg.domain.entity.*;
 import org.pattern.rpg.presentation.menu.Menu;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
+=======
+import org.pattern.rpg.domain.factory.EnemyFactory;
+import org.pattern.rpg.presentation.menu.Menu;
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
 
 
 public class TurnBattle extends Battle {
-    
-    // lista de inimigos e player
+
     private List<Enemy> enemies;
     private Player player;
+<<<<<<< HEAD
     private String logBatalha;
     private ConsoleUI ui;
     private Scanner scanner;
@@ -29,34 +36,70 @@ public class TurnBattle extends Battle {
     public TurnBattle(Player player, Scanner scanner, ConsoleUI ui) {
         this.scanner = scanner;
         this.ui = ui;
+=======
+
+    // Fila de turnos (player + inimigos)
+    private List<Entity> turnQueue;
+    private int currentTurnIndex;
+
+    // Menu injetado — é a UI quem exibe, não o domínio
+    private Menu menu;
+
+    // Arma inicial do player (string placeholder até integrar WeaponStrategy)
+    private String nomeArmaPlayer;
+
+    // Andar atual da masmorra — controla a dificuldade do spawn
+    private int andarAtual;
+
+    // Flag de rendição/fuga
+    private boolean rendeu;
+
+    // Log de combate exibido no HUD
+    private String logBatalha;
+
+    public TurnBattle(Player player, Menu menu, String nomeArmaPlayer, int andarAtual) {
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
         this.player = player;
+        this.menu = menu;
+        this.nomeArmaPlayer = nomeArmaPlayer;
+        this.andarAtual = andarAtual;
+        this.logBatalha = "Um grupo de inimigos bloqueia seu caminho!";
     }
 
     @Override
     protected List<Enemy> createEnemies() {
-        List<String> enumEnemies = List.of("goblin", "wolf", "skeleton", "vampire", "dragon", "hollow");
-        List<Enemy> spawnedEnemies = new ArrayList<>();
-        int numEnemies = new Random().nextInt(3) + 1; // 1 a 3 inimigos
+        // Inimigos comuns: disponíveis desde o andar 1
+        List<String> tiposComuns = new java.util.ArrayList<>(java.util.Arrays.asList(
+                "goblin", "wolf", "skeleton", "hollow"
+        ));
 
-        // sorteia tipos de inimigos
-        for (int i = 0; i < numEnemies; i++) {
-            String type = enumEnemies.get(new Random().nextInt(enumEnemies.size()));
-            spawnedEnemies.add(EnemyFactory.createEnemy(type));
+        // Inimigos de elite: só aparecem a partir do andar 6
+        if (andarAtual >= 6) {
+            tiposComuns.add("vampire");
+            tiposComuns.add("dragon");
         }
 
-        return spawnedEnemies;
+        List<Enemy> spawnados = new ArrayList<>();
+        int numInimigos = new Random().nextInt(3) + 1; // 1 a 3
+
+        for (int i = 0; i < numInimigos; i++) {
+            String tipo = tiposComuns.get(new Random().nextInt(tiposComuns.size()));
+            spawnados.add(EnemyFactory.createEnemy(tipo));
+        }
+        return spawnados;
     }
 
     @Override
     protected void setup() {
-        this.battleState = 0; // Em andamento
+        this.battleState = 0; // em andamento
+        this.rendeu = false;
         this.enemies = createEnemies();
 
-        // cria fila de turnos com player e inimigos
         this.turnQueue = new ArrayList<>();
         this.turnQueue.add(player);
         this.turnQueue.addAll(enemies);
         this.currentTurnIndex = 0;
+<<<<<<< HEAD
 
         logBatalha = "Batalha iniciada!";
     }
@@ -65,18 +108,27 @@ public class TurnBattle extends Battle {
     protected Creature nextTurn() {
         // pega o próximo na fila de turnos
         Creature current = turnQueue.get(currentTurnIndex);
-        currentTurnIndex = (currentTurnIndex + 1) % turnQueue.size();
-
-        // se a entidade estiver morta, pula para o próximo
-        while (!current.isAlive()) {
-            current = turnQueue.get(currentTurnIndex);
-            currentTurnIndex = (currentTurnIndex + 1) % turnQueue.size();
-        }
-
-        return current;
+=======
     }
 
     @Override
+    protected Entity nextTurn() {
+        Entity atual = turnQueue.get(currentTurnIndex);
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
+        currentTurnIndex = (currentTurnIndex + 1) % turnQueue.size();
+
+        // Pula entidades mortas
+        int tentativas = 0;
+        while (!atual.isAlive() && tentativas < turnQueue.size()) {
+            atual = turnQueue.get(currentTurnIndex);
+            currentTurnIndex = (currentTurnIndex + 1) % turnQueue.size();
+            tentativas++;
+        }
+        return atual;
+    }
+
+    @Override
+<<<<<<< HEAD
     protected void executeTurn(Creature creature) {
         if (creature instanceof Player) {
             logBatalha = "Seu turno! Escolha sua ação";
@@ -85,27 +137,122 @@ public class TurnBattle extends Battle {
         } else {
             logBatalha = "Turno do Inimigo: " + creature.getName();
             //creature.attack();
+=======
+    protected void executeTurn(Entity entidade) {
+        if (entidade instanceof Player) {
+            executarTurnoPlayer();
+        } else if (entidade instanceof Enemy) {
+            executarTurnoInimigo((Enemy) entidade);
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Lógica do turno do Player
+    // -------------------------------------------------------------------------
+    private void executarTurnoPlayer() {
+        boolean acaoRealizada = false;
+        String estadoMenu = "PRINCIPAL";
+
+        while (!acaoRealizada) {
+            menu.exibirTelaBatalha(player, enemies, logBatalha);
+
+            if (estadoMenu.equals("PRINCIPAL")) {
+                String escolha = menu.exibirMenuPrincipalBatalha(player.getName());
+                switch (escolha) {
+                    case "1": estadoMenu = "ATACAR"; break;
+                    case "2": estadoMenu = "ITEM";   break;
+                    case "3":
+                        logBatalha = player.getName() + " se rendeu e recuou...";
+                        this.rendeu = true;
+                        acaoRealizada = true;
+                        break;
+                    default:
+                        logBatalha = "Ação inválida! Escolha de 1 a 3.";
+                }
+
+            } else if (estadoMenu.equals("ATACAR")) {
+                String escolha = menu.exibirMenuAtacar(nomeArmaPlayer);
+                switch (escolha) {
+                    case "1": // Ataque Rápido
+                        Enemy alvoRapido = primeiroInimigoVivo();
+                        if (alvoRapido != null) {
+                            int dano = 15; // FUTURAMENTE: virá da WeaponStrategy
+                            alvoRapido.takeDamage(dano);
+                            logBatalha = player.getName() + " usou Ataque Rápido em "
+                                         + alvoRapido.getName() + ". Causou " + dano + " de dano.";
+                        }
+                        acaoRealizada = true;
+                        break;
+                    case "2": // Ataque Pesado
+                        Enemy alvoPesado = primeiroInimigoVivo();
+                        if (alvoPesado != null) {
+                            int dano = 25; // FUTURAMENTE: virá da WeaponStrategy
+                            alvoPesado.takeDamage(dano);
+                            logBatalha = player.getName() + " usou Ataque Pesado em "
+                                         + alvoPesado.getName() + ". Causou " + dano + " de dano!";
+                        }
+                        acaoRealizada = true;
+                        break;
+                    case "3": estadoMenu = "PRINCIPAL"; break;
+                    default:
+                        logBatalha = "Ataque inválido!";
+                }
+
+            } else if (estadoMenu.equals("ITEM")) {
+                String escolha = menu.exibirMenuItens();
+                switch (escolha) {
+                    case "1": // Poção de Vida Pequena
+                        // FUTURAMENTE: remover item do inventário real do Player
+                        int cura = 20;
+                        player.heal(cura);
+                        logBatalha = player.getName() + " usou Poção de Vida Pequena. Recuperou " + cura + " HP!";
+                        acaoRealizada = true;
+                        break;
+                    case "2": // Bomba de Fumaça
+                        logBatalha = player.getName() + " usou Bomba de Fumaça. Os inimigos foram cegados!";
+                        acaoRealizada = true;
+                        break;
+                    case "3": estadoMenu = "PRINCIPAL"; break;
+                    default:
+                        logBatalha = "Item inválido!";
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Lógica do turno do Inimigo
+    // -------------------------------------------------------------------------
+    private void executarTurnoInimigo(Enemy inimigo) {
+        if (inimigo.isDead()) return; // segurança: não age se morto
+
+        int danoRecebido = inimigo.attackTarget(player);
+        logBatalha = inimigo.getName() + " atacou " + player.getName()
+                     + " e causou " + danoRecebido + " de dano!";
+
+        menu.exibirTelaBatalha(player, enemies, logBatalha);
+        // Pequena pausa para o jogador ver o ataque do inimigo
+        try { Thread.sleep(1200); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+
+    // -------------------------------------------------------------------------
+    // Condição de fim e resultado
+    // -------------------------------------------------------------------------
     @Override
     protected boolean isOver() {
-        // checa se o jogador morreu
+        if (rendeu) {
+            this.battleState = 3; // fuga/rendição
+            return true;
+        }
+
         if (!player.isAlive()) {
             this.battleState = 2; // derrota
             return true;
         }
 
-        // checa se todos os inimigos morreram
-        boolean allEnemiesDead = true;
-        for (Enemy e : enemies) {
-            if (e.isAlive()) {
-                allEnemiesDead = false;
-                break;
-            }
-        }
-
-        if (allEnemiesDead) {
+        boolean todosInimigos = enemies.stream().allMatch(Enemy::isDead);
+        if (todosInimigos) {
             this.battleState = 1; // vitória
             return true;
         }
@@ -116,9 +263,37 @@ public class TurnBattle extends Battle {
     @Override
     protected void finish() {
         if (battleState == 1) {
+<<<<<<< HEAD
             logBatalha = "Vitória";
         } else if (battleState == 2) {
             logBatalha = "Derrota";
+=======
+            menu.exibirResultadoBatalha(true, player.getName());
+        } else if (battleState == 3) {
+            // rendição: apenas informa, GameManager cuidará do fim de jogo
+            menu.exibirResultadoBatalha(false, player.getName() + " (se rendeu)");
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
         }
+        // battleState == 2 (derrota do player): GameManager exibe o fim de jogo
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+    private Enemy primeiroInimigoVivo() {
+        for (Enemy e : enemies) {
+            if (!e.isDead()) return e;
+        }
+        return null;
+    }
+
+    /** Expõe o estado final: 0 = em andamento, 1 = vitória, 2 = derrota, 3 = rendição. */
+    public int getEstadoBatalha() {
+        return battleState;
+    }
+
+    /** Retorna true se o player se rendeu/fugiu neste encontro. */
+    public boolean isRendido() {
+        return rendeu;
     }
 }

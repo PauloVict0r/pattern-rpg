@@ -12,4 +12,6 @@ public abstract class Usable implements Item {
     public boolean isUsable() {
         return true;
     }
+
+    public abstract void use(org.pattern.rpg.domain.entity.Creature target);
 }

@@ -10,4 +10,8 @@ public class Wolf extends Enemy {
         this.setDefense(1);
         this.setCriticalChance(0.12);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

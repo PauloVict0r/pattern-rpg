@@ -18,4 +18,8 @@ public class DragonArmor extends WearableDecorator {
     public String getDescription() {
         return "Forjada a partir de escamas de dragão, oferece proteção extrema, grande vitalidade e aumenta o poder ofensivo.";
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

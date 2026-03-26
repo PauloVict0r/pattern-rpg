@@ -10,4 +10,8 @@ public class Skeleton extends Enemy {
         this.setDefense(3);
         this.setCriticalChance(0.10);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385

@@ -10,4 +10,8 @@ public class NullEnemy extends Enemy {
         this.setDefense(0);
         this.setCriticalChance(0.0);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4543bc425957374648bc203e70ece873fc2b3385
