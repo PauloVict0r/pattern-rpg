@@ -10,21 +10,19 @@ public class SaveRepository {
 
     public void createSave(Save save) {
         String sql = "INSERT INTO saves (item, pfloor, score) VALUES (?, ?, ?)";
-
         Connection connection = ConnectionDB.getInstance().getConnection();
 
-        try (connection; PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setArray(1, connection.createArrayOf("text", save.getItems()));
+        // Apenas o PreparedStatement no try-with-resources para não fechar a Connection singleton
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            
+            // Convertendo o array de String para uma única String separada por vírgulas
+            stmt.setString(1, String.join(",", save.getItems()));
             stmt.setInt(2, save.getFloor());
             stmt.setInt(3, save.getScore());
 
             stmt.executeUpdate();
-            System.out.println("Save created!");
-
         } catch (SQLException e) {
-            System.out.println("Error creating save:");
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

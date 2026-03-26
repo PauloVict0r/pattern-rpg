@@ -1,0 +1,18 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------------------< [0;36morg.pattern.rpg:PatternRPG[0;1m >---------------------[m
+[[1;34mINFO[m] [1mBuilding PatternRPG 1.0-SNAPSHOT[m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mexec-maven-plugin:3.1.1:java[m [1m(default-cli)[m @ [36mPatternRPG[0;1m ---[m
+Tabela 'saves' verificada/criada com sucesso.
+[H[2J[3J=================================
+      BEM-VINDO VIAJANTE!       
+=================================
+
+--- MENU PRINCIPAL ---
+1. Continuar
+2. Novo Jogo
+3. Scores
+4. Sair
+Escolha uma opção (1-4): 

@@ -3,6 +3,7 @@ package org.pattern.rpg.presentation.menu;
 import org.pattern.rpg.application.GameManager;
 import org.pattern.rpg.domain.entity.Entity;
 import org.pattern.rpg.domain.entity.enemy.Enemy;
+import org.pattern.rpg.infrastructure.repository.SaveRepository;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
 
 import java.util.List;
@@ -222,6 +223,43 @@ public class Menu {
         ui.limparTerminal();
     }
 
+    public SaveRepository.SaveData selecionarSave(List<SaveRepository.SaveData> saves) {
+        ui.limparTerminal();
+        ui.imprimir("=================================");
+        ui.imprimir("        CARREGAR JOGO            ");
+        ui.imprimir("=================================");
+        ui.imprimir("0. [DELETAR SAVE]");
+        for (int i = 0; i < saves.size(); i++) {
+            SaveRepository.SaveData s = saves.get(i);
+            ui.imprimir((i + 1) + ". " + s.name() + " (Andar: " + s.floor() + " | HP: " + s.hp() + ")");
+        }
+        ui.imprimir((saves.size() + 1) + ". [Voltar]");
+        ui.imprimir("\nEscolha o save (0-" + (saves.size() + 1) + "): ");
+
+        String entrada = ui.lerEntrada();
+        try {
+            int opcao = Integer.parseInt(entrada);
+            if (opcao == 0) {
+                // Retorna um objeto "fake" ou nulo com sinalização para o GameManager
+                // Mas vamos simplificar: o Menu pergunta qual deletar.
+                ui.imprimir("\nDigite o número da lista (1-" + saves.size() + ") que deseja APAGAR (ou Enter para cancelar):");
+                String paraApagar = ui.lerEntrada();
+                if (paraApagar.isEmpty()) return null;
+                
+                int idx = Integer.parseInt(paraApagar);
+                if (idx >= 1 && idx <= saves.size()) {
+                    SaveRepository.SaveData saveParaDeletar = saves.get(idx - 1);
+                    facade.deletarSave(saveParaDeletar.id());
+                    return null; // Força recarregar a lista
+                }
+            } else if (opcao >= 1 && opcao <= saves.size()) {
+                return saves.get(opcao - 1);
+            }
+        } catch (NumberFormatException ignored) {}
+
+        return null;
+    }
+
     // =========================================================================
     // UI DE BATALHA — centralizada aqui conforme responsabilidade de apresentação
     // =========================================================================
@@ -250,13 +288,23 @@ public class Menu {
     }
 
     /**
-     * Menu principal de ação durante o combate. Retorna a escolha do jogador ("1"-"3").
+     * Menu principal de ação durante o combate. Retorna a escolha do jogador ("1"-"4").
      */
     public String exibirMenuPrincipalBatalha(String nomeJogador) {
         ui.imprimir("  1. Atacar      |  3. Fugir");
-        ui.imprimir("  2. Usar item   |");
-        ui.imprimir("\nO que " + nomeJogador + " fará? (1-3): ");
+        ui.imprimir("  2. Usar item   |  4. Salvar e sair");
+        ui.imprimir("\nO que " + nomeJogador + " fará? (1-4): ");
         return ui.lerEntrada();
+    }
+
+    public void exibirMensagemSaida(String mensagem) {
+        ui.limparTerminal();
+        ui.imprimir("=======================================================");
+        ui.imprimir("  " + mensagem);
+        ui.imprimir("=======================================================");
+        ui.imprimir("\nPressione [ENTER] para continuar...");
+        ui.lerEntrada();
+        ui.limparTerminal();
     }
 
     /**

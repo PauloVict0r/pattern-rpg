@@ -9,4 +9,12 @@ public class Player extends Creature {
         setAttack(15);
         setDefense(3);
     }
+
+    public Player(String name, int hp, int attack, int defense, double crit) {
+        setName(name);
+        setHp(hp);
+        setAttack(attack);
+        setDefense(defense);
+        setCriticalChance(crit);
+    }
 }

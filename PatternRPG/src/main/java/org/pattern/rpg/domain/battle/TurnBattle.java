@@ -32,6 +32,9 @@ public class TurnBattle extends Battle {
     // Flag de rendição/fuga
     private boolean rendeu;
 
+    // Flag de save and quit
+    private boolean savedAndQuit;
+
     // Log de combate exibido no HUD
     private String logBatalha;
 
@@ -70,6 +73,7 @@ public class TurnBattle extends Battle {
     protected void setup() {
         this.battleState = 0; // em andamento
         this.rendeu = false;
+        this.savedAndQuit = false;
         this.enemies = createEnemies();
 
         this.turnQueue = new ArrayList<>();
@@ -122,8 +126,13 @@ public class TurnBattle extends Battle {
                         this.rendeu = true;
                         acaoRealizada = true;
                         break;
+                    case "4":
+                        logBatalha = player.getName() + " decidiu salvar o progresso e sair...";
+                        this.savedAndQuit = true;
+                        acaoRealizada = true;
+                        break;
                     default:
-                        logBatalha = "Ação inválida! Escolha de 1 a 3.";
+                        logBatalha = "Ação inválida! Escolha de 1 a 4.";
                 }
 
             } else if (estadoMenu.equals("ATACAR")) {
@@ -196,6 +205,11 @@ public class TurnBattle extends Battle {
     // -------------------------------------------------------------------------
     @Override
     protected boolean isOver() {
+        if (savedAndQuit) {
+            this.battleState = 4; // fuga/rendição
+            return true;
+        }
+
         if (rendeu) {
             this.battleState = 3; // fuga/rendição
             return true;
@@ -223,6 +237,7 @@ public class TurnBattle extends Battle {
             // rendição: apenas informa, GameManager cuidará do fim de jogo
             menu.exibirResultadoBatalha(false, player.getName() + " (se rendeu)");
         }
+        // battleState == 4 não faz nada, GameManager exibe mensagem e volta pro menu
         // battleState == 2 (derrota do player): GameManager exibe o fim de jogo
     }
 
@@ -236,7 +251,7 @@ public class TurnBattle extends Battle {
         return null;
     }
 
-    /** Expõe o estado final: 0 = em andamento, 1 = vitória, 2 = derrota, 3 = rendição. */
+    /** Expõe o estado final: 0 = em andamento, 1 = vitória, 2 = derrota, 3 = rendição, 4 = saved and quit. */
     public int getEstadoBatalha() {
         return battleState;
     }
@@ -244,5 +259,9 @@ public class TurnBattle extends Battle {
     /** Retorna true se o player se rendeu/fugiu neste encontro. */
     public boolean isRendido() {
         return rendeu;
+    }
+
+    public boolean isSavedAndQuit() {
+        return savedAndQuit;
     }
 }
