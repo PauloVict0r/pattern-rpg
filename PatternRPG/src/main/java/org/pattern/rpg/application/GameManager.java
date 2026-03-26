@@ -22,7 +22,6 @@ public class GameManager {
     private Scanner scanner;
     private ConsoleUI ui;
     private Menu menu;
-    private InventoryManager inventoryManager;
     private SaveRepository saveRepository;
     private boolean jogoRodando;
 
@@ -34,7 +33,6 @@ public class GameManager {
         this.scanner = new Scanner(System.in);
         this.ui = new ConsoleUI(scanner);
         this.menu = new Menu(ui, this);
-        this.inventoryManager = new InventoryManager(ui);
         this.saveRepository = new SaveRepository();
         this.saveRepository.initDatabase();
     }
@@ -63,7 +61,7 @@ public class GameManager {
 
         Player player = builder.getResult();
         player.setInventory(new ArrayList<>());
-        
+
         this.andarAtual = 1;
         this.pontuacao = 0;
         this.armaduraEquipadaNome = "Nenhuma";
@@ -76,26 +74,26 @@ public class GameManager {
         boolean savedAndQuit = false;
 
         while (playerEntity.isAlive() && !rendeu && !savedAndQuit) {
-            TurnBattle batalha = new TurnBattle((Player)extrairBase(playerEntity), menu, armaNome, andarAtual);
+            TurnBattle batalha = new TurnBattle((Player) extrairBase(playerEntity), menu, armaNome, andarAtual);
             batalha.startBattle();
 
             rendeu = batalha.isRendido();
             savedAndQuit = batalha.isSavedAndQuit();
 
             if (savedAndQuit) {
-                saveRepository.saveGame((Player)extrairBase(playerEntity), andarAtual, armaNome, armaduraEquipadaNome);
+                saveRepository.saveGame((Player) extrairBase(playerEntity), andarAtual, armaNome, armaduraEquipadaNome);
                 menu.exibirMensagemSaida("Progresso salvo com sucesso!");
                 break;
             }
 
             if (playerEntity.isAlive() && !rendeu) {
                 pontuacao += andarAtual * 100;
-                ((Player)extrairBase(playerEntity)).incrementarStatus();
-                
+                ((Player) extrairBase(playerEntity)).incrementarStatus();
+
                 playerEntity = processarLoot(playerEntity);
 
                 if (andarAtual % 5 == 0) {
-                    ((Player)extrairBase(playerEntity)).restaurarHp();
+                    ((Player) extrairBase(playerEntity)).restaurarHp();
                     menu.exibirEntreAndares(andarAtual, pontuacao, true);
                 } else {
                     menu.exibirEntreAndares(andarAtual, pontuacao, false);
@@ -112,28 +110,31 @@ public class GameManager {
 
     private Entity processarLoot(Entity player) {
         // 1. Loot de Item OBRIGATÓRIO (Factory)
-        String[] possiveis = {"health potion", "strength potion", "defense potion"};
+        String[] possiveis = { "health potion", "strength potion", "defense potion" };
         Item novoItem = ItemFactory.createItem(possiveis[new Random().nextInt(possiveis.length)]);
-        
+
         ui.imprimir("\n[RECOMPENSA] Você encontrou: " + novoItem.getName());
-        List<Item> inv = ((Player)extrairBase(player)).getInventory();
+        List<Item> inv = ((Player) extrairBase(player)).getInventory();
         if (inv == null) {
             inv = new ArrayList<>();
-            ((Player)extrairBase(player)).setInventory(inv);
+            ((Player) extrairBase(player)).setInventory(inv);
         }
-        
+
         if (inv.size() >= 4) {
             ui.imprimir("Seu inventário está cheio (4/4).");
             ui.imprimir("Escolha um item para SUBSTITUIR (0 para descartar o novo):");
-            for(int i=0; i<inv.size(); i++) ui.imprimir((i+1) + ". " + inv.get(i).getName());
-            
+            for (int i = 0; i < inv.size(); i++)
+                ui.imprimir((i + 1) + ". " + inv.get(i).getName());
+
             try {
                 int esc = Integer.parseInt(ui.lerEntrada());
                 if (esc >= 1 && esc <= 4) {
-                    inv.set(esc-1, novoItem);
+                    inv.set(esc - 1, novoItem);
                     ui.imprimir("Item substituído!");
                 }
-            } catch (Exception e) { ui.imprimir("Item novo descartado."); }
+            } catch (Exception e) {
+                ui.imprimir("Item novo descartado.");
+            }
         } else {
             inv.add(novoItem);
             ui.imprimir("Item guardado!");
@@ -143,10 +144,14 @@ public class GameManager {
 
     private Entity aplicarArmadura(Entity base, String nomeArmadura) {
         switch (nomeArmadura) {
-            case "Armadura de Ferro": return new IronArmor(base);
-            case "Armadura Dourada": return new GoldenArmor(base);
-            case "Armadura de Sombras": return new ShadowArmor(base);
-            default: return base;
+            case "Armadura de Ferro":
+                return new IronArmor(base);
+            case "Armadura Dourada":
+                return new GoldenArmor(base);
+            case "Armadura de Sombras":
+                return new ShadowArmor(base);
+            default:
+                return base;
         }
     }
 
@@ -159,16 +164,26 @@ public class GameManager {
 
     private WeaponStrategy mapearArma(String nome) {
         switch (nome) {
-            case "Espada Longa": return new LongSwordStrategy();
-            case "Espada Curta": return new ShortSwordStrategy();
-            case "Machado de Batalha": return new AxeStrategy();
-            case "Arco Longo": return new BowStrategy();
-            case "Adaga Furtiva": return new DaggerStrategy();
-            case "Cajado Mágico": return new StaffStrategy();
-            case "Lâmina do Dragão": return new DragonBladeStrategy();
-            case "Arco Forte": return new StrongBowStrategy();
-            case "Espada de Oito Empunhaduras": return new SwordStrategy();
-            default: return new PunchStrategy();
+            case "Espada Longa":
+                return new LongSwordStrategy();
+            case "Espada Curta":
+                return new ShortSwordStrategy();
+            case "Machado de Batalha":
+                return new AxeStrategy();
+            case "Arco Longo":
+                return new BowStrategy();
+            case "Adaga Furtiva":
+                return new DaggerStrategy();
+            case "Cajado Mágico":
+                return new StaffStrategy();
+            case "Lâmina do Dragão":
+                return new DragonBladeStrategy();
+            case "Arco Forte":
+                return new StrongBowStrategy();
+            case "Espada de Oito Empunhaduras":
+                return new SwordStrategy();
+            default:
+                return new PunchStrategy();
         }
     }
 
@@ -183,10 +198,11 @@ public class GameManager {
         if (escolhido != null) {
             this.andarAtual = escolhido.floor();
             this.armaduraEquipadaNome = escolhido.armor();
-            
-            Player playerBase = new Player(escolhido.name(), escolhido.hp(), escolhido.attack(), escolhido.defense(), escolhido.crit());
+
+            Player playerBase = new Player(escolhido.name(), escolhido.hp(), escolhido.attack(), escolhido.defense(),
+                    escolhido.crit());
             playerBase.setWeapon(mapearArma(escolhido.weapon()));
-            
+
             // Lógica de Deserialização do Inventário
             List<Item> invCarregado = new ArrayList<>();
             if (escolhido.items() != null && !escolhido.items().isEmpty()) {
@@ -198,7 +214,7 @@ public class GameManager {
                 }
             }
             playerBase.setInventory(invCarregado);
-            
+
             Entity playerDecorado = aplicarArmadura(playerBase, armaduraEquipadaNome);
             loopDeJogo(playerDecorado, escolhido.name(), escolhido.weapon());
         }
