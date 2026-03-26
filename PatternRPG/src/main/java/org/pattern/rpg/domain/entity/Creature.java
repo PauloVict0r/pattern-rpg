@@ -1,6 +1,5 @@
 package org.pattern.rpg.domain.entity;
 
-
 import org.pattern.rpg.domain.item.Item;
 import org.pattern.rpg.domain.weapon_strategy.PunchStrategy;
 import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
@@ -36,6 +35,12 @@ public abstract class Creature implements Entity {
         }
     }
 
+    public void increaseHP(int value) {
+        if (value > 0) {
+            this.hp += value;
+        }
+    }
+
     public int getDefense() {
         return this.defense;
     }
@@ -45,18 +50,13 @@ public abstract class Creature implements Entity {
     }
 
     public int attack(Entity target) {
-        return this.weapon.attack(target);
+        return this.weapon.attack(target, getAttack(), getCriticalChance());
     }
 
     public int receiveDamage(int damage) {
         int damage_taken = Math.max(0, damage - this.getDefense());
         this.decreaseHP(damage_taken);
         return damage_taken;
-    }
-
-    /** Restaura HP pelo valor informado. Não ultrapassa o HP atual máximo (sem cap fixo por ora). */
-    public void heal(int amount) {
-        this.hp += amount;
     }
 
     public void setWeapon(WeaponStrategy weapon) {
@@ -67,28 +67,37 @@ public abstract class Creature implements Entity {
         this.name = name;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
+    public String getName() {
+        return this.name;
     }
 
-    public void setAttack(int attack) {
-        this.attack = attack;
+    public void setHP(int hp) {
+        this.hp = hp;
     }
 
     public void setDefense(int defense) {
         this.defense = defense;
     }
 
-    public String getName() {
-        return this.name;
+    public void setAttack(int attack) {
+        this.attack = attack;
     }
 
+    public void setCriticalChance(double criticalChance) {
+        this.criticalChance = criticalChance;
+    }
+
+    public void setInventory(List<Item> inventory) {
+        this.inventory = inventory;
+    }
+
+    @Override
     public boolean isAlive() {
         return this.hp > 0;
     }
 
+    @Override
     public boolean isDead() {
         return this.hp <= 0;
     }
-
 }

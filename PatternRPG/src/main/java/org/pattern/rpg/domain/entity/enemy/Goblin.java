@@ -1,12 +1,13 @@
 package org.pattern.rpg.domain.entity.enemy;
 
+import org.pattern.rpg.domain.entity.Entity;
+
 public class Goblin extends Enemy{
     public Goblin() {
-        initStats("Goblin Sorrateiro", 30, 5);
-    }
-
-    @Override
-    public void attack() {
-        System.out.println(this.name + " esfaqueia o jogador causando " + this.damage + " de dano!");
+        this.setName("Goblin Sorrateiro");
+        this.setHP(30);
+        this.setAttack(5);
+        this.setDefense(2);
+        this.setCriticalChance(0.05);
     }
 }

@@ -1,54 +1,67 @@
 package org.pattern.rpg.domain.builder;
 
-import org.pattern.rpg.domain.entity.Player;
 import java.util.List;
+import java.util.function.Supplier;
+import org.pattern.rpg.domain.item.Item;
+import org.pattern.rpg.domain.entity.Player;
+import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
 
-public class PlayerBuilder implements CreatureBuilder{
+public class PlayerBuilder implements CreatureBuilder {
     private Player player;
+    private Supplier<Player> playerSupplier;
 
-    public PlayerBuilder() {
+    // Construtor recebe como instanciar o Player (ex: Player::new)
+    public PlayerBuilder(Supplier<Player> playerSupplier) {
+        this.playerSupplier = playerSupplier;
         this.reset();
     }
 
     @Override
     public void reset() {
-        this.player = new Player();
-    }
-
-    // Supondo que a classe Player já tenha os métodos prontos
-    @Override
-    public void setHP(int hp) {
-        player.setHp(hp);
+        this.player = this.playerSupplier.get();
     }
 
     @Override
-    public void setDefence(int numberDefence) {
-        player.setDefence(numberDefence);
-    }
+    public void setName(String name) { this.player.setName(name); }
 
     @Override
-    public void setAttack(int numberAttack) {
-        player.setAttack(numberAttack);
-    }
+    public void setHP(int hp) { this.player.setHP(hp); }
 
     @Override
-    public void setArmor(String itemArmor) {
-        player.setArmor(itemArmor);
-    }
+    public void setDefense(int defense) { this.player.setDefense(defense); }
 
     @Override
-    public void setWeapon(String itemWeapon) {
-        player.setWeapon(itemWeapon);
-    }
+    public void setAttack(int attack) { this.player.setAttack(attack); }
 
     @Override
-    public void setInventory(List<String> items) {
-        player.setInventory(items);
+    public void setCriticalChance(double criticalChance) { this.player.setCriticalChance(criticalChance); }
+
+    @Override
+    public void setWeapon(WeaponStrategy weapon) { this.player.setWeapon(weapon); }
+
+    @Override
+    public String getName() { return this.player.getName(); }
+
+    @Override
+    public int getHP() { return this.player.getHP(); }
+
+    @Override
+    public int getDefense() { return this.player.getDefense(); }
+
+    @Override
+    public int getAttack() { return this.player.getAttack(); }
+
+    @Override
+    public double getCriticalChance() { return this.player.getCriticalChance(); }
+
+    public void setInventory(List<Item> items) { 
+        this.player.setInventory(items); 
     }
 
+    // Retorna o Player pronto para jogar
     public Player getResult() {
-        Player product = this.player;
-        this.reset();
-        return product;
+        Player finishedPlayer = this.player;
+        this.reset(); // Zera o builder
+        return finishedPlayer;
     }
 }

@@ -1,12 +1,13 @@
 package org.pattern.rpg.domain.entity.enemy;
 
+import org.pattern.rpg.domain.entity.Entity;
+
 public class Dragon extends Enemy {
     public Dragon() {
-        initStats("Dragão Ancestral", 200, 50);
-    }
-
-    @Override
-    public void attack() {
-        System.out.println(this.name + " cospe um mar de chamas causando " + this.damage + " de dano crítico!");
+        this.setName("Dragão Ancestral");
+        this.setHP(200);
+        this.setAttack(50);
+        this.setDefense(20);
+        this.setCriticalChance(0.15);
     }
 }

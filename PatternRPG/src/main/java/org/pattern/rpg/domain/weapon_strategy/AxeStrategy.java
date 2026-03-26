@@ -1,13 +1,12 @@
 package org.pattern.rpg.domain.weapon_strategy;
 
 import org.pattern.rpg.domain.entity.Entity;
-import org.pattern.rpg.domain.item.Item;
 
-public class SwordStrategy extends Weapon {
+public class AxeStrategy extends Weapon {
 
     @Override
     public int attack(Entity target, int damageStat, double critStat) {
-        int damage = this.weaponDamage() + damageStat;
+        int damage = this.weaponDamage() +  damageStat;
 
         if (Math.random() < critStat) {
             damage *= 2;
@@ -18,16 +17,16 @@ public class SwordStrategy extends Weapon {
 
     @Override
     public int weaponDamage() {
-        return 5;
+        return 10;
     }
 
     @Override
     public String getName() {
-        return "Espada comum";
+        return "Machado Pesado";
     }
 
     @Override
     public String getDescription() {
-        return "Uma espada feita de um metal ordinário.";
+        return "Uma arma brutal que causa grande dano, porém exige força para ser utilizada.";
     }
 }

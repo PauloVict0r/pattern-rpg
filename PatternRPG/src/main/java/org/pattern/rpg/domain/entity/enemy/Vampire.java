@@ -1,15 +1,20 @@
 package org.pattern.rpg.domain.entity.enemy;
 
+import org.pattern.rpg.domain.entity.Entity;
+
 public class Vampire extends Enemy {
     public Vampire() {
-        initStats("Vampiro Sedento", 50, 20);
+        this.setName("Vampiro Sedento");
+        this.setHP(50);
+        this.setAttack(20);
+        this.setDefense(5);
+        this.setCriticalChance(0.08);
     }
 
     @Override
-    public void attack() {
-        int healAmount = (int) (this.damage * 0.25);
-        // Vampiro drena vida ao atacar — heal() de Creature garante que o HP sobe corretamente
-        this.heal(healAmount);
+    public int attack(Entity target) {
+        int damageDealt = target.receiveDamage(this.getAttack());
+        this.increaseHP((int) (damageDealt * 0.25));
+        return damageDealt;
     }
 }
-

@@ -1,16 +1,15 @@
 package org.pattern.rpg.domain.weapon_strategy;
 
 import org.pattern.rpg.domain.entity.Entity;
-import org.pattern.rpg.domain.item.Item;
 
-public class SwordStrategy extends Weapon {
+public class StaffStrategy extends Weapon {
 
     @Override
     public int attack(Entity target, int damageStat, double critStat) {
         int damage = this.weaponDamage() + damageStat;
 
         if (Math.random() < critStat) {
-            damage *= 2;
+            damage *= 4;
         }
 
         return target.receiveDamage(damage);
@@ -18,16 +17,16 @@ public class SwordStrategy extends Weapon {
 
     @Override
     public int weaponDamage() {
-        return 5;
+        return 6;
     }
 
     @Override
     public String getName() {
-        return "Espada comum";
+        return "Cajado Arcano";
     }
 
     @Override
     public String getDescription() {
-        return "Uma espada feita de um metal ordinário.";
+        return "Um cajado imbuído com energia mágica que amplifica ataques.";
     }
 }
