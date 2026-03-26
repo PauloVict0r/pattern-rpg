@@ -36,6 +36,7 @@ public class EnemyBuilder implements CreatureBuilder {
 
     @Override
     public void setWeapon(WeaponStrategy weapon) { this.enemy.setWeapon(weapon); }
+    
     @Override
     public String getName() { return this.enemy.getName(); }
 

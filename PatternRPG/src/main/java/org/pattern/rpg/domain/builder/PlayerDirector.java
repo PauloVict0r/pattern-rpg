@@ -1,7 +1,5 @@
 package org.pattern.rpg.domain.builder;
 
-import org.pattern.rpg.domain.entity.Player;
-
 public class PlayerDirector {
 
     public void basePlayer(PlayerBuilder playerBuilder) {

@@ -9,6 +9,9 @@ import org.pattern.rpg.domain.entity.enemy.Skeleton;
 import org.pattern.rpg.domain.entity.enemy.Vampire;
 import org.pattern.rpg.domain.entity.enemy.Wolf;
 
+import org.pattern.rpg.domain.builder.EnemyBuilder;
+import org.pattern.rpg.domain.builder.EnemyDirector;
+
 public class EnemyFactory {
     public static Enemy createEnemy(String type) {
         if (type == null) {
@@ -39,10 +42,10 @@ public class EnemyFactory {
     }
 
     private static Enemy createWithBuilder(java.util.function.Supplier<Enemy> supplier) {
-        org.pattern.rpg.domain.builder.EnemyBuilder builder = new org.pattern.rpg.domain.builder.EnemyBuilder(supplier);
+        EnemyBuilder builder = new EnemyBuilder(supplier);
         
         double chance = Math.random();
-        org.pattern.rpg.domain.builder.EnemyDirector director = new org.pattern.rpg.domain.builder.EnemyDirector();
+        EnemyDirector director = new EnemyDirector();
         
         if (chance <= 0.05) {
             director.makeBoss(builder);

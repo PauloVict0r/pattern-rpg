@@ -39,6 +39,21 @@ public class PlayerBuilder implements CreatureBuilder {
     @Override
     public void setWeapon(WeaponStrategy weapon) { this.player.setWeapon(weapon); }
 
+    @Override
+    public String getName() { return this.player.getName(); }
+
+    @Override
+    public int getHP() { return this.player.getHP(); }
+
+    @Override
+    public int getDefense() { return this.player.getDefense(); }
+
+    @Override
+    public int getAttack() { return this.player.getAttack(); }
+
+    @Override
+    public double getCriticalChance() { return this.player.getCriticalChance(); }
+
     public void setInventory(List<Item> items) { 
         this.player.setInventory(items); 
     }
