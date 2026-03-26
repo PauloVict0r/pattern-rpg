@@ -227,18 +227,18 @@ public interface WeaponStrategy {
 
 **Armas implementadas:**
 
-| Arma | Classe | Características |
-|---|---|---|
-| Espada Comum | `SwordStrategy` | Balanceada, dano + crítico |
-| Espada Longa | `LongSwordStrategy` | Alto dano base |
-| Espada Curta | `ShortSwordStrategy` | Rápida, dano menor |
-| Machado de Batalha | `AxeStrategy` | Alto dano, sem crítico especial |
-| Arco Longo | `BowStrategy` | Dano à distância |
-| Arco Forte | `StrongBowStrategy` | Dano elevado |
-| Adaga Furtiva | `DaggerStrategy` | Alta chance de crítico |
-| Cajado Mágico | `StaffStrategy` | Dano mágico |
-| Lâmina do Dragão | `DragonBladeStrategy` | Arma mais poderosa |
-| Soco | `PunchStrategy` | Sem arma (fallback) |
+| Arma | Classe |
+|---|---|
+| Espada Comum | `SwordStrategy` |
+| Espada Longa | `LongSwordStrategy` |
+| Espada Curta | `ShortSwordStrategy` |
+| Machado de Batalha | `AxeStrategy` |
+| Arco Longo | `BowStrategy` |
+| Arco Forte | `StrongBowStrategy` |
+| Adaga Furtiva | `DaggerStrategy` |
+| Cajado Mágico | `StaffStrategy` |
+| Lâmina do Dragão | `DragonBladeStrategy` |
+| Soco | `PunchStrategy` |
 
 ---
 
@@ -268,54 +268,7 @@ public static Enemy createEnemy(String type) {
 
 ---
 
-## Diagrama de Interação dos Padrões
-
-```
-┌─────────────────────────────────────────┐
-│           GameManager (Facade)          │
-│   orquestra todo o fluxo do jogo        │
-└──────────┬──────────────────────────────┘
-           │
-     ┌─────▼──────┐     ┌─────────────────┐
-     │ PlayerDir. │     │  EnemyFactory   │
-     │ (Director) │     │   (Factory)     │──┐
-     └─────┬──────┘     └────────┬────────┘  │
-           │                     │           │
-     ┌─────▼──────┐     ┌────────▼────────┐  │ usa
-     │PlayerBuilder│    │  EnemyBuilder   │◄─┘
-     │  (Builder) │     │   (Builder)     │
-     └─────┬──────┘     └────────┬────────┘
-           │                     │ tipo definido por
-     ┌─────▼──────┐     ┌────────▼────────┐
-     │   Player   │     │  EnemyDirector  │
-     │+ WeaponStrat│    │   (Director)    │
-     │ (Strategy) │     └─────────────────┘
-     └─────┬──────┘
-           │ equipado com
-     ┌─────▼──────┐     ┌─────────────────┐
-     │ IronArmor/ │     │  ConnectionDB   │
-     │ GoldenArmor│     │  (Singleton)    │
-     │ (Decorator)│     └─────────────────┘
-     └────────────┘
-           │
-     ┌─────▼──────────────────────────────┐
-     │       Battle (Template Method)      │
-     │  setup → nextTurn → executeTurn    │
-     │       → isOver → finish            │
-     └─────────────────────────────────────┘
-                    NullEnemy (Null Object)
-                 retornado quando tipo inválido
-```
-
----
-
-## Tecnologias
-
-- **Java 17+**
-- **SQLite** (via JDBC) — persistência de saves e ranking
-- **Maven** — gerenciamento de dependências
-
-## ▶️ Como Executar
+## Como Executar
 
 ```bash
 # Na raiz do projeto PatternRPG
