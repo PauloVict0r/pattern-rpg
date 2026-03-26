@@ -4,8 +4,6 @@ import org.pattern.rpg.domain.entity.Creature;
 import org.pattern.rpg.domain.entity.Entity;
 
 public abstract class Enemy extends Creature {
-    protected String name;
-    protected int damage;
 
     /**
      * Inicializa o inimigo definindo seu nome, HP inicial e dano.
@@ -13,14 +11,10 @@ public abstract class Enemy extends Creature {
      * centralizada — assim isAlive() e isDead() herdados funcionam corretamente.
      */
     protected void initStats(String name, int hp, int damage) {
-        this.name = name;
-        this.damage = damage;
         setName(name);
         setHp(hp);
+        setAttack(damage);
     }
-
-    public String getName() { return name; }
-    public int getDamage() { return damage; }
 
     /**
      * Retorna o HP atual do inimigo — delega para getHP() de Creature.
@@ -35,7 +29,7 @@ public abstract class Enemy extends Creature {
 
     /** Ataca um alvo e retorna o dano efetivo causado. */
     public int attackTarget(Entity target) {
-        return target.receiveDamage(this.damage);
+        return target.receiveDamage(this.getAttack());
     }
 
     /** Callback para quando o inimigo morre — pode ser expandido com loot/XP. */
