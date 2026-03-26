@@ -6,7 +6,7 @@ public class Goblin extends Enemy {
     
     public Goblin() {
         this.setName("Goblin Sorrateiro");
-        this.setHP(30);
+        this.setHp(30);
         this.setAttack(5);
         this.setDefense(2);
         this.setCriticalChance(0.05);

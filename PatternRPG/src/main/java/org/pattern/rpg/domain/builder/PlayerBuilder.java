@@ -25,7 +25,7 @@ public class PlayerBuilder implements CreatureBuilder {
     public void setName(String name) { this.player.setName(name); }
 
     @Override
-    public void setHP(int hp) { this.player.setHP(hp); }
+    public void setHP(int hp) { this.player.setHp(hp); }
 
     @Override
     public void setDefense(int defense) { this.player.setDefense(defense); }

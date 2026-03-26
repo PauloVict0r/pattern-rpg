@@ -23,7 +23,7 @@ public class EnemyBuilder implements CreatureBuilder {
     public void setName(String name) { this.enemy.setName(name); }
 
     @Override
-    public void setHP(int hp) { this.enemy.setHP(hp); }
+    public void setHP(int hp) { this.enemy.setHp(hp); }
 
     @Override
     public void setDefense(int defense) { this.enemy.setDefense(defense); }

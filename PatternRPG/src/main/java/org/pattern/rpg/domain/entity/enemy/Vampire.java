@@ -5,7 +5,7 @@ import org.pattern.rpg.domain.entity.Entity;
 public class Vampire extends Enemy {
     public Vampire() {
         this.setName("Vampiro Sedento");
-        this.setHP(50);
+        this.setHp(50);
         this.setAttack(20);
         this.setDefense(5);
         this.setCriticalChance(0.08);

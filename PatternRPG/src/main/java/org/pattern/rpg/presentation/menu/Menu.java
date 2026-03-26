@@ -2,22 +2,15 @@ package org.pattern.rpg.presentation.menu;
 
 import org.pattern.rpg.application.GameManager;
 import org.pattern.rpg.domain.entity.Entity;
-import org.pattern.rpg.domain.entity.Player;
-import org.pattern.rpg.domain.entity.Save;
 import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
 
 import java.util.List;
 import java.util.Random;
 
-import org.pattern.rpg.domain.entity.Entity;
-
-import java.util.List;
-
 public class Menu {
-
-    private final ConsoleUI ui;
-    private final GameManager facade;
+    private ConsoleUI ui;
+    private GameManager facade;
 
     public Menu(ConsoleUI ui, GameManager facade) {
         this.ui = ui;
@@ -28,37 +21,46 @@ public class Menu {
     // MENU PRINCIPAL DO JOGO
     // =========================================================================
 
-    public void exibirMenuPrincipal(){
+    public void exibirMenuPrincipal() {
         ui.limparTerminal();
         ui.imprimir("=================================");
-        ui.imprimir("      BEM-VINDO VIAJANTE!        ");
+        ui.imprimir("      BEM-VINDO VIAJANTE!       ");
         ui.imprimir("=================================");
         ui.imprimir("\n--- MENU PRINCIPAL ---");
-        ui.imprimir("1. Iniciar Jogo");
-        ui.imprimir("2. Scores");
-        ui.imprimir("3. Sair");
-        ui.imprimir("Escolha uma opção (1-3): ");
+        ui.imprimir("1. Continuar");
+        ui.imprimir("2. Novo Jogo");
+        ui.imprimir("3. Scores");
+        ui.imprimir("4. Sair");
+        ui.imprimir("Escolha uma opção (1-4): ");
 
-        String input = ui.lerEntrada();
+        String entrada = ui.lerEntrada();
 
         try {
-            int option = Integer.parseInt(input);
-
-            switch (option) {
+            int opcao = Integer.parseInt(entrada);
+            switch (opcao) {
                 case 1:
-                    showStartGameMenu();
+                    ui.imprimir("=> Opção escolhida: CONTINUAR o jogo.");
+                    ui.pausar(2000);
+                    facade.continuarJogo();
                     break;
                 case 2:
-                    showScores();
+                    ui.imprimir("=> Opção escolhida: Iniciar NOVO JOGO.");
+                    criarNovoPersonagem();
                     break;
                 case 3:
-                    ui.imprimir("=> Encerrando o jogo. Até a próxima aventura!");
+                    ui.imprimir("=> Opção escolhida: Visualizar SCORES.");
+                    exibirScores();
+                    break;
+                case 4:
+                    ui.imprimir("=> Opção escolhida: SAIR. Até a próxima aventura!");
                     ui.pausar(1000);
-                    facade.stopGame();
+                    ui.limparTerminal();
+                    facade.encerrarJogo();
                     break;
                 default:
-                    ui.imprimir("=> Opção inválida! Digite um número de 1 a 3.");
+                    ui.imprimir("=> Opção inválida! Por favor, digite um número de 1 a 4.");
                     ui.pausar(2000);
+                    ui.limparTerminal();
                     break;
             }
         } catch (NumberFormatException e) {
@@ -67,130 +69,30 @@ public class Menu {
         }
     }
 
-    private void showStartGameMenu() {
-        boolean running = true;
-
-        while (running) {
-            ui.limparTerminal();
-            ui.imprimir("=================================");
-            ui.imprimir("          INICIAR JOGO           ");
-            ui.imprimir("=================================");
-            ui.imprimir("1. Novo Jogo");
-            ui.imprimir("2. Carregar Jogo");
-            ui.imprimir("3. Voltar");
-            ui.imprimir("Escolha uma opção (1-3): ");
-
-            String input = ui.lerEntrada();
-
-            try {
-                int option = Integer.parseInt(input);
-
-                switch (option) {
-                    case 1:
-                        createNewCharacter();
-                        running = false;
-                        break;
-                    case 2:
-                        showLoadGameScreen();
-                        running = false;
-                        break;
-                    case 3:
-                        running = false;
-                        break;
-                    default:
-                        ui.imprimir("=> Opção inválida! Digite um número de 1 a 3.");
-                        ui.pausar(2000);
-                        break;
-                }
-            } catch (NumberFormatException e) {
-                ui.imprimir("=> Entrada inválida! Digite apenas números.");
-                ui.pausar(2000);
-            }
-        }
-    }
-
-    private void showLoadGameScreen() {
-        ui.limparTerminal();
-        ui.imprimir("=================================");
-        ui.imprimir("          CARREGAR JOGO          ");
-        ui.imprimir("=================================");
-
-        List<Save> saves = facade.listSaves();
-
-        if (saves.isEmpty()) {
-            ui.imprimir("Nenhum save encontrado.");
-            ui.imprimir("\nPressione [ENTER] para voltar...");
-            ui.lerEntrada();
-            return;
-        }
-
-        ui.imprimir(String.format("| %-5s | %-10s | %-10s |", "ID", "PISO", "SCORE"));
-        ui.imprimir("-----------------------------------------");
-
-        for (Save save : saves) {
-            ui.imprimir(String.format("| %-5d | %-10d | %-10d |",
-                    save.getId(),
-                    save.getFloor(),
-                    save.getScore()));
-        }
-
-        ui.imprimir("-----------------------------------------");
-        ui.imprimir("Digite o ID do save que deseja carregar ou 0 para voltar:");
-
-        try {
-            int selectedId = Integer.parseInt(ui.lerEntrada());
-
-            if (selectedId == 0) {
-                return;
-            }
-
-            Save loadedSave = facade.loadSave(selectedId);
-
-            if (loadedSave == null) {
-                ui.imprimir("Save não encontrado.");
-                ui.imprimir("\nPressione [ENTER] para continuar...");
-                ui.lerEntrada();
-                return;
-            }
-
-            facade.applyLoadedSave(loadedSave);
-
-            ui.imprimir("Save carregado com sucesso!");
-            ui.imprimir("Piso atual: " + loadedSave.getFloor());
-            ui.imprimir("Score atual: " + loadedSave.getScore());
-            ui.imprimir("\nPressione [ENTER] para continuar...");
-            ui.lerEntrada();
-
-            facade.continueGame();
-
-        } catch (NumberFormatException e) {
-            ui.imprimir("Entrada inválida! Digite apenas números.");
-            ui.pausar(2000);
-        }
-    }
-
-    private void createNewCharacter() {
+    private void criarNovoPersonagem() {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            NOVO JOGO            ");
         ui.imprimir("=================================");
 
-        ui.imprimir("Digite o nome do seu personagem: ");
-        String playerName = ui.lerEntrada();
+        ui.imprimir("Digite o nome do seu Personagem: ");
+        String nomePersonagem = ui.lerEntrada();
 
-        ui.imprimir("\nBem-vindo(a), " + playerName + "!");
+        ui.imprimir("\nBem vindo(a), " + nomePersonagem + "!");
         ui.pausar(1500);
 
-        String[] equipments = {
-                "Faca cega",
-                "Arco improvisado",
-                "Armadura em frangalhos",
-                "Cajado velho",
-                "Porrete rachado",
-                "Cabo de espada",
-                "Katana de madeira",
-                "Cabo de lança",
-                "Espada de Oito Empunhaduras Divergente Sila Divina General Mahoraga"
+        // FUTURAMENTE: Essa lista de Strings será substituída por instâncias da classe Item
+        // vindas de um ItemFactory ou lidas do banco de dados.
+        String[] equipamentos = {
+            "Faca cega",
+            "Arco improvisado",
+            "Armadura em frangalhos",
+            "Cajado velho",
+            "Porrete rachado",
+            "Cabo de espada",
+            "Katana de madeira",
+            "Cabo de lança",
+            "Espada de Oito Empunhaduras Divergente Sila Divina General Mahoraga"
         };
 
         Random random = new Random();
@@ -199,26 +101,28 @@ public class Menu {
         while (item1 == item2) {
             item2 = random.nextInt(equipamentos.length);
         }
-        int item3 = random.nextInt(equipments.length);
+        int item3 = random.nextInt(equipamentos.length);
         while (item3 == item1 || item3 == item2) {
-            item3 = random.nextInt(equipments.length);
+            item3 = random.nextInt(equipamentos.length);
         }
 
-        boolean choosing = true;
-        String chosenEquipment = "";
+        boolean escolhendo = true;
+        String equipamentoEscolhido = "";
 
-        while (choosing) {
+        while (escolhendo) {
             ui.limparTerminal();
             ui.imprimir("=================================");
             ui.imprimir("         ARSENAL INICIAL         ");
             ui.imprimir("=================================");
-            ui.imprimir("1. " + equipments[item1]);
-            ui.imprimir("2. " + equipments[item2]);
-            ui.imprimir("3. " + equipments[item3]);
+            ui.imprimir("        Sua escolha (1-3):       ");
             ui.imprimir("---------------------------------");
-            ui.imprimir("Escolha seu equipamento (1-3): ");
 
-            String input = ui.lerEntrada();
+            ui.espacar(31, equipamentos[item1]);
+            ui.espacar(31, equipamentos[item2]);
+            ui.espacar(31, equipamentos[item3]);
+            ui.imprimir("---------------------------------");
+
+            String entrada = ui.lerEntrada();
 
             try {
                 int escolha = Integer.parseInt(entrada);
@@ -232,7 +136,7 @@ public class Menu {
                     equipamentoEscolhido = equipamentos[item3];
                     escolhendo = false;
                 } else {
-                    ui.imprimir("Escolha inválida. Digite um número entre 1 e 3.");
+                    ui.imprimir("Escolha inválida. Os deuses exigem um número entre 1 e 3.");
                     ui.pausar(2000);
                 }
             } catch (NumberFormatException e) {
@@ -243,32 +147,65 @@ public class Menu {
 
         ui.limparTerminal();
         ui.imprimir("=================================");
-        ui.imprimir("Você escolheu: " + chosenEquipment);
-        ui.imprimir("A masmorra aguarda, " + playerName + "!");
+        ui.imprimir("Você empunhou: " + equipamentoEscolhido);
+        ui.imprimir("A masmorra aguarda, " + nomePersonagem);
         ui.imprimir("=================================");
-        ui.imprimir("\nPressione [ENTER] para iniciar...");
+        ui.imprimir("\nPressione [ENTER] para iniciar a descida...");
         ui.lerEntrada();
+        ui.limparTerminal();
 
-        facade.startNewGame(playerName, chosenEquipment);
+        // O Menu delega a continuação para o Facade
+        facade.orquestrarNovoJogo(nomePersonagem, equipamentoEscolhido);
     }
 
-    private void showScores() {
+    private void exibirScores() {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            HIGHSCORES           ");
         ui.imprimir("=================================");
         ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", "Último Piso"));
         ui.imprimir("---------------------------------");
+
+        // FUTURAMENTE: Esses dados serão um List<Score> puxados do SaveRepository.java
         ui.imprimir(String.format("| %-15s | %-11s |", "Gandalf", "15"));
         ui.imprimir(String.format("| %-15s | %-11s |", "Arthur", "100"));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Merlin", "11"));
+        ui.imprimir(String.format("| %-15s | %-11s |", "Gandalf", "11"));
         ui.imprimir("---------------------------------");
 
-        ui.imprimir("\nPressione [ENTER] para retornar ao menu principal...");
+        ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");
         ui.lerEntrada();
+        ui.limparTerminal();
     }
 
-    public void exibirFimDeJogo(String nomeJogador, ConsoleUI ui) {
+    // =========================================================================
+    // UI ENTRE ANDARES
+    // =========================================================================
+
+    /**
+     * Exibido após cada vitória de encontro, antes de iniciar o próximo andar.
+     */
+    public void exibirEntreAndares(int andarConcluido, int pontuacaoAtual, boolean descansou) {
+        ui.limparTerminal();
+        ui.imprimir("=================================");
+        ui.imprimir("       ANDAR  " + andarConcluido + "  CONCLUÍDO!      ");
+        ui.imprimir("=================================");
+        ui.imprimir(String.format("  Pontuação acumulada: %-8d", pontuacaoAtual));
+        ui.imprimir("---------------------------------");
+        if (descansou) {
+            ui.imprimir("  *** DESCANSO! HP restaurado! ***");
+            ui.imprimir("---------------------------------");
+        }
+        ui.imprimir("  Próximo andar: " + (andarConcluido + 1));
+        if (andarConcluido + 1 == 6) {
+            ui.imprimir("  ⚠ Inimigos mais poderosos se aproximam!");
+        }
+        ui.imprimir("=================================");
+        ui.imprimir("\n Pressione [ENTER] para descer...");
+        ui.lerEntrada();
+        ui.limparTerminal();
+    }
+
+    public void exibirFimDeJogo(String nomeJogador, String equipamentoEscolhido, int andarAtual) {
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            FIM DE JOGO           ");
@@ -276,102 +213,18 @@ public class Menu {
 
         // FUTURAMENTE: Os dados virão da entidade Player
         ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", nomeJogador));
-        //ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", "100"));
+        ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
+        ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", andarAtual));
         ui.imprimir("=================================");
-    }
-
-    public void showGameOver(String playerName, String chosenEquipment) {
-        boolean onGameOverScreen = true;
-
-        while (onGameOverScreen) {
-            ui.limparTerminal();
-            ui.imprimir("=================================");
-            ui.imprimir("            FIM DE JOGO          ");
-            ui.imprimir("=================================");
-            ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", playerName));
-            ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", chosenEquipment));
-            ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", String.valueOf(facade.getCurrentFloor())));
-            ui.imprimir(String.format("| %-15s | %-11s |", "Pontuação", String.valueOf(facade.getCurrentScore())));
-            ui.imprimir("=================================");
-            ui.imprimir("1. Criar novo save");
-            ui.imprimir("2. Sobrescrever save existente");
-            ui.imprimir("3. Voltar ao menu principal");
-            ui.imprimir("Escolha uma opção (1-3): ");
-
-            String input = ui.lerEntrada();
-
-            try {
-                int option = Integer.parseInt(input);
-
-                switch (option) {
-                    case 1:
-                        facade.createSave();
-                        ui.imprimir("Save criado com sucesso!");
-                        ui.imprimir("\nPressione [ENTER] para continuar...");
-                        ui.lerEntrada();
-                        onGameOverScreen = false;
-                        break;
-
-                    case 2:
-                        List<Save> saves = facade.listSaves();
-
-                        if (saves.isEmpty()) {
-                            ui.imprimir("Nenhum save encontrado para sobrescrever.");
-                            ui.imprimir("\nPressione [ENTER] para continuar...");
-                            ui.lerEntrada();
-                            break;
-                        }
-
-                        ui.imprimir(String.format("| %-5s | %-10s | %-10s |", "ID", "PISO", "SCORE"));
-                        ui.imprimir("-----------------------------------------");
-
-                        for (Save save : saves) {
-                            ui.imprimir(String.format("| %-5d | %-10d | %-10d |",
-                                    save.getId(),
-                                    save.getFloor(),
-                                    save.getScore()));
-                        }
-
-                        ui.imprimir("-----------------------------------------");
-                        ui.imprimir("Digite o ID do save que deseja sobrescrever:");
-
-                        int overwriteId = Integer.parseInt(ui.lerEntrada());
-                        facade.overwriteSave(overwriteId);
-
-                        ui.imprimir("Save sobrescrito com sucesso!");
-                        ui.imprimir("\nPressione [ENTER] para continuar...");
-                        ui.lerEntrada();
-                        onGameOverScreen = false;
-                        break;
-
-                    case 3:
-                        onGameOverScreen = false;
-                        break;
-
-                    default:
-                        ui.imprimir("Opção inválida!");
-                        ui.pausar(2000);
-                        break;
-                }
-
-            } catch (NumberFormatException e) {
-                ui.imprimir("Entrada inválida! Digite apenas números.");
-                ui.pausar(2000);
-            }
-        }
 
         ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");
         ui.lerEntrada();
         ui.limparTerminal();
     }
 
-    public static void Batalha(Entity player, List<Enemy> enemiesList, String logBatalha, ConsoleUI ui) {
-        boolean acao = true;
-        int nivel = 1;
-        int vida = 100;
-        String nomeJogador = "rs da silva";
-    }
+    // =========================================================================
+    // UI DE BATALHA — centralizada aqui conforme responsabilidade de apresentação
+    // =========================================================================
 
     /**
      * Exibe o HUD completo da batalha: status do player, dos inimigos e o log de combate.
