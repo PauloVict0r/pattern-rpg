@@ -1,19 +1,17 @@
 package org.pattern.rpg.domain.item.usable;
 
-public class HealthPotion extends Usable {
-    private final int healthRestore = 50;
+import org.pattern.rpg.domain.entity.Creature;
 
-    @Override
-    public String getName() {
-        return "Poção de Vida";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Restaura uma pequena quantidade de vida.";
-    }
+public abstract class HealthPotion extends Usable {
+    protected int healthRestore;
 
     public int getHealthRestore() {
         return healthRestore;
+    }
+
+    @Override
+    public void use(Creature target) {
+        target.increaseHP(this.healthRestore);
+        System.out.println(target.getName() + " consumiu a " + this.getName() + " e curou " + this.healthRestore + " de HP!");
     }
 }

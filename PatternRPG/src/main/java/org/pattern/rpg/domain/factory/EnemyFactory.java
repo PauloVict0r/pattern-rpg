@@ -9,6 +9,9 @@ import org.pattern.rpg.domain.entity.enemy.Skeleton;
 import org.pattern.rpg.domain.entity.enemy.Vampire;
 import org.pattern.rpg.domain.entity.enemy.Wolf;
 
+import org.pattern.rpg.domain.builder.EnemyBuilder;
+import org.pattern.rpg.domain.builder.EnemyDirector;
+
 public class EnemyFactory {
     public static Enemy createEnemy(String type) {
         if (type == null) {
@@ -18,23 +21,40 @@ public class EnemyFactory {
         switch (type.toLowerCase()) {
             case "skeleton":
             case "esqueleto":
-                return new Skeleton();
+                return createWithBuilder(Skeleton::new);
             case "goblin":
-                return new Goblin();
+                return createWithBuilder(Goblin::new);
             case "vampire":
             case "vampiro":
-                return new Vampire();
+                return createWithBuilder(Vampire::new);
             case "wolf":
             case "lobo":
-                return new Wolf();
+                return createWithBuilder(Wolf::new);
             case "dragon":
             case "dragao":
             case "dragão":
-                return new Dragon();
+                return createWithBuilder(Dragon::new);
             case "hollow":
-                return new Hollow();
+                return createWithBuilder(Hollow::new);
             default:
                 return new NullEnemy();
         }
+    }
+
+    private static Enemy createWithBuilder(java.util.function.Supplier<Enemy> supplier) {
+        EnemyBuilder builder = new EnemyBuilder(supplier);
+        
+        double chance = Math.random();
+        EnemyDirector director = new EnemyDirector();
+        
+        if (chance <= 0.05) {
+            director.makeBoss(builder);
+        } else if (chance <= 0.20) {
+            director.makeChampion(builder);
+        } else if (chance <= 0.50) {
+            director.makeMinion(builder);
+        }
+
+        return builder.getResult();
     }
 }

@@ -1,4 +1,6 @@
 package org.pattern.rpg.application;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.pattern.rpg.domain.battle.TurnBattle;
 import org.pattern.rpg.domain.entity.Player;

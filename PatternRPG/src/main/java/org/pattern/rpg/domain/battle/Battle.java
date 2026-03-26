@@ -1,11 +1,7 @@
 package org.pattern.rpg.domain.battle;
 
 import org.pattern.rpg.domain.entity.*;
-<<<<<<< HEAD
-import org.pattern.rpg.domain.entity.enemy.*;
-=======
 import org.pattern.rpg.domain.entity.enemy.Enemy;
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
 
 import java.util.List;
 
@@ -17,7 +13,7 @@ public abstract class Battle {
         setup();
 
         while (!isOver()) {
-            Creature currentCreature = nextTurn();
+            Entity currentCreature = nextTurn();
             executeTurn(currentCreature);
         }
 
@@ -25,8 +21,8 @@ public abstract class Battle {
     }
 
     protected abstract void setup();
-    protected abstract Creature nextTurn();
-    protected abstract void executeTurn(Creature creature);
+    protected abstract Entity nextTurn();
+    protected abstract void executeTurn(Entity creature);
     protected abstract boolean isOver();
     protected abstract void finish();
     protected abstract List<Enemy> createEnemies();

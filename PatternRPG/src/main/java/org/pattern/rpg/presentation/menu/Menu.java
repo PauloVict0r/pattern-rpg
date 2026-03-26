@@ -2,11 +2,16 @@ package org.pattern.rpg.presentation.menu;
 
 import org.pattern.rpg.application.GameManager;
 import org.pattern.rpg.domain.entity.Entity;
+import org.pattern.rpg.domain.entity.Player;
+import org.pattern.rpg.domain.entity.Save;
 import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
 
 import java.util.List;
 import java.util.Random;
+
+import org.pattern.rpg.domain.entity.Entity;
+
 import java.util.List;
 
 public class Menu {
@@ -23,7 +28,7 @@ public class Menu {
     // MENU PRINCIPAL DO JOGO
     // =========================================================================
 
-    public void exibirMenuPrincipal() {
+    public void exibirMenuPrincipal(){
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("      BEM-VINDO VIAJANTE!        ");
@@ -41,23 +46,13 @@ public class Menu {
 
             switch (option) {
                 case 1:
-                    ui.imprimir("=> Opção escolhida: CONTINUAR o jogo.");
-                    ui.pausar(2000);
-                    facade.continuarJogo();
+                    showStartGameMenu();
                     break;
                 case 2:
                     showScores();
                     break;
                 case 3:
-<<<<<<< HEAD
-                    ui.imprimir("=> Opção escolhida: Visualizar SCORES.");
-                    exibirScores(ui);
-                    break;
-                case 4:
-                    ui.imprimir("=> Opção escolhida: SAIR. Até a próxima aventura!");
-=======
                     ui.imprimir("=> Encerrando o jogo. Até a próxima aventura!");
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
                     ui.pausar(1000);
                     facade.stopGame();
                     break;
@@ -254,18 +249,10 @@ public class Menu {
         ui.imprimir("\nPressione [ENTER] para iniciar...");
         ui.lerEntrada();
 
-<<<<<<< HEAD
-        // O Menu delega a continuação para o Facade
-        facade.orquestrarNovoJogo(nomePersonagem);
-    }
-
-    private void exibirScores(ConsoleUI ui) {
-=======
         facade.startNewGame(playerName, chosenEquipment);
     }
 
     private void showScores() {
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            HIGHSCORES           ");
@@ -281,7 +268,6 @@ public class Menu {
         ui.lerEntrada();
     }
 
-<<<<<<< HEAD
     public void exibirFimDeJogo(String nomeJogador, ConsoleUI ui) {
         ui.limparTerminal();
         ui.imprimir("=================================");
@@ -293,15 +279,99 @@ public class Menu {
         //ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
         ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", "100"));
         ui.imprimir("=================================");
+    }
+
+    public void showGameOver(String playerName, String chosenEquipment) {
+        boolean onGameOverScreen = true;
+
+        while (onGameOverScreen) {
+            ui.limparTerminal();
+            ui.imprimir("=================================");
+            ui.imprimir("            FIM DE JOGO          ");
+            ui.imprimir("=================================");
+            ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", playerName));
+            ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", chosenEquipment));
+            ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", String.valueOf(facade.getCurrentFloor())));
+            ui.imprimir(String.format("| %-15s | %-11s |", "Pontuação", String.valueOf(facade.getCurrentScore())));
+            ui.imprimir("=================================");
+            ui.imprimir("1. Criar novo save");
+            ui.imprimir("2. Sobrescrever save existente");
+            ui.imprimir("3. Voltar ao menu principal");
+            ui.imprimir("Escolha uma opção (1-3): ");
+
+            String input = ui.lerEntrada();
+
+            try {
+                int option = Integer.parseInt(input);
+
+                switch (option) {
+                    case 1:
+                        facade.createSave();
+                        ui.imprimir("Save criado com sucesso!");
+                        ui.imprimir("\nPressione [ENTER] para continuar...");
+                        ui.lerEntrada();
+                        onGameOverScreen = false;
+                        break;
+
+                    case 2:
+                        List<Save> saves = facade.listSaves();
+
+                        if (saves.isEmpty()) {
+                            ui.imprimir("Nenhum save encontrado para sobrescrever.");
+                            ui.imprimir("\nPressione [ENTER] para continuar...");
+                            ui.lerEntrada();
+                            break;
+                        }
+
+                        ui.imprimir(String.format("| %-5s | %-10s | %-10s |", "ID", "PISO", "SCORE"));
+                        ui.imprimir("-----------------------------------------");
+
+                        for (Save save : saves) {
+                            ui.imprimir(String.format("| %-5d | %-10d | %-10d |",
+                                    save.getId(),
+                                    save.getFloor(),
+                                    save.getScore()));
+                        }
+
+                        ui.imprimir("-----------------------------------------");
+                        ui.imprimir("Digite o ID do save que deseja sobrescrever:");
+
+                        int overwriteId = Integer.parseInt(ui.lerEntrada());
+                        facade.overwriteSave(overwriteId);
+
+                        ui.imprimir("Save sobrescrito com sucesso!");
+                        ui.imprimir("\nPressione [ENTER] para continuar...");
+                        ui.lerEntrada();
+                        onGameOverScreen = false;
+                        break;
+
+                    case 3:
+                        onGameOverScreen = false;
+                        break;
+
+                    default:
+                        ui.imprimir("Opção inválida!");
+                        ui.pausar(2000);
+                        break;
+                }
+
+            } catch (NumberFormatException e) {
+                ui.imprimir("Entrada inválida! Digite apenas números.");
+                ui.pausar(2000);
+            }
+        }
 
         ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");
         ui.lerEntrada();
         ui.limparTerminal();
     }
 
-    // =========================================================================
-    // UI DE BATALHA — centralizada aqui conforme responsabilidade de apresentação
-    // =========================================================================
+    public static void Batalha(Entity player, List<Enemy> enemiesList, String logBatalha, ConsoleUI ui) {
+        boolean acao = true;
+        int nivel = 1;
+        int vida = 100;
+        String nomeJogador = "rs da silva";
+    }
 
     /**
      * Exibe o HUD completo da batalha: status do player, dos inimigos e o log de combate.
