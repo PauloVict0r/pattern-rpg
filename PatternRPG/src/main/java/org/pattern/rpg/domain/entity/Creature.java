@@ -97,8 +97,6 @@ public abstract class Creature implements Entity {
     public void incrementarStatus() {
         this.hpMaximo += 5;
         this.attack   += 1;
-        // Cura parcial proporcional ao bônus de HP para não deixar o player fraco logo após
-        this.hp = Math.min(this.hp + 5, this.hpMaximo);
     }
 
     public void setAttack(int attack) {

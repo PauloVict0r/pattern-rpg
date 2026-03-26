@@ -67,6 +67,7 @@ public class GameManager {
             // Se venceu o encontro E ainda está vivo: aplica progressão e avança
             if (player.isAlive() && !rendeu) {
                 pontuacao += andarAtual * 100;
+                player.incrementarStatus();
 
                 // A cada 5 andares: restaura o HP completamente ("descansão")
                 if (andarAtual % 5 == 0) {
