@@ -8,6 +8,7 @@ import java.util.List;
 
 public abstract class Creature implements Entity {
     private int hp;
+    private int hpMaximo;
     private int defense;
     private int attack;
     private double criticalChance;
@@ -59,6 +60,11 @@ public abstract class Creature implements Entity {
         return damage_taken;
     }
 
+    /** Restaura HP pelo valor informado, respeitando o HP máximo. */
+    public void heal(int amount) {
+        this.hp = Math.min(this.hp + amount, this.hpMaximo > 0 ? this.hpMaximo : this.hp + amount);
+    }
+
     public void setWeapon(WeaponStrategy weapon) {
         this.weapon = weapon;
     }
@@ -75,23 +81,18 @@ public abstract class Creature implements Entity {
         this.hp = hp;
     }
 
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
     public void setAttack(int attack) {
         this.attack = attack;
     }
 
-    public void setCriticalChance(double criticalChance) {
-        this.criticalChance = criticalChance;
+    public void setDefense(int defense) {
+        this.defense = defense;
     }
 
-    public void setInventory(List<Item> inventory) {
-        this.inventory = inventory;
+    public String getName() {
+        return this.name;
     }
 
-    @Override
     public boolean isAlive() {
         return this.hp > 0;
     }

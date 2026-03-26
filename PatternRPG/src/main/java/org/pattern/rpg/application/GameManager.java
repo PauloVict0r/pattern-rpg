@@ -14,6 +14,10 @@ public class GameManager {
     private InventoryManager inventoryManager;
     private boolean jogoRodando;
 
+    // Estado da sessão atual
+    private int andarAtual;
+    private int pontuacao;
+
     public GameManager() {
         this.scanner = new Scanner(System.in);
         this.ui = new ConsoleUI(scanner);
@@ -42,24 +46,45 @@ public class GameManager {
     // -------------------------------------------------------------------------
 
     /**
-     * Ponto de entrada para um novo jogo: cria o Player e delega o combate.
+     * Ponto de entrada para um novo jogo: cria o Player e executa o
+     * laço externo de masmorra — um novo combate por andar —
+     * enquanto o player estiver vivo e não se render.
      */
     public void orquestrarNovoJogo(String nomeJogador, String equipamentoEscolhido) {
         // FUTURAMENTE: Player será construído via PlayerBuilder com stats completos.
         Player player = new Player(nomeJogador);
-        orquestrarCombate(player, equipamentoEscolhido);
+        this.andarAtual = 1;
+        this.pontuacao = 0;
+        boolean rendeu = false;
 
-        // Após a batalha exibe o fim de jogo
-        menu.exibirFimDeJogo(nomeJogador, equipamentoEscolhido);
-    }
+        while (player.isAlive() && !rendeu) {
+            // Instancia e executa um encontro para o andar atual
+            TurnBattle batalha = new TurnBattle(player, menu, equipamentoEscolhido, andarAtual);
+            batalha.startBattle();
 
-    /**
-     * Instancia TurnBattle e inicia o Loop de combate via Template Method.
-     * GameManager não sabe COMO o combate acontece — apenas o inicia.
-     */
-    public void orquestrarCombate(Player player, String nomeArma) {
-        TurnBattle batalha = new TurnBattle(player, menu, nomeArma);
-        batalha.startBattle();
+            rendeu = batalha.isRendido();
+
+            // Se venceu o encontro E ainda está vivo: aplica progressão e avança
+            if (player.isAlive() && !rendeu) {
+                pontuacao += andarAtual * 100;
+
+                // Incrementa levemente os status do player a cada andar vencido
+                player.incrementarStatus();
+
+                // A cada 5 andares: restaura o HP completamente ("descansão")
+                if (andarAtual % 5 == 0) {
+                    player.restaurarHp();
+                    menu.exibirEntreAndares(andarAtual, pontuacao, true);
+                } else {
+                    menu.exibirEntreAndares(andarAtual, pontuacao, false);
+                }
+
+                andarAtual++;
+            }
+        }
+
+        // Ao sair do laço: player morreu ou se rendeu
+        menu.exibirFimDeJogo(nomeJogador, equipamentoEscolhido, andarAtual);
     }
 
     public void continuarJogo() {
