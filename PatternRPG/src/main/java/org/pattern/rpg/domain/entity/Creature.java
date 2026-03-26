@@ -1,5 +1,6 @@
 package org.pattern.rpg.domain.entity;
 
+
 import org.pattern.rpg.domain.item.Item;
 import org.pattern.rpg.domain.weapon_strategy.PunchStrategy;
 import org.pattern.rpg.domain.weapon_strategy.WeaponStrategy;
@@ -36,12 +37,6 @@ public abstract class Creature implements Entity {
         }
     }
 
-    public void increaseHP(int value) {
-        if (value > 0) {
-            this.hp += value;
-        }
-    }
-
     public int getDefense() {
         return this.defense;
     }
@@ -51,7 +46,7 @@ public abstract class Creature implements Entity {
     }
 
     public int attack(Entity target) {
-        return this.weapon.attack(target, getAttack(), getCriticalChance());
+        return this.weapon.attack(target);
     }
 
     public int receiveDamage(int damage) {
@@ -73,12 +68,27 @@ public abstract class Creature implements Entity {
         this.name = name;
     }
 
-    public String getName() {
-        return this.name;
+    public void setHp(int hp) {
+        this.hp = hp;
+        if (hp > this.hpMaximo) {
+            this.hpMaximo = hp; // sincroniza o máximo na inicialização
+        }
     }
 
-    public void setHP(int hp) {
-        this.hp = hp;
+    /** Restaura o HP completamente ao máximo. Usado a cada 5 andares. */
+    public void restaurarHp() {
+        this.hp = this.hpMaximo;
+    }
+
+    /**
+     * Incremento leve de status a cada andar vencido.
+     * +5 HP máximo, +1 ataque, +0 defesa (expansão futura).
+     */
+    public void incrementarStatus() {
+        this.hpMaximo += 5;
+        this.attack   += 1;
+        // Cura parcial proporcional ao bônus de HP para não deixar o player fraco logo após
+        this.hp = Math.min(this.hp + 5, this.hpMaximo);
     }
 
     public void setAttack(int attack) {
@@ -97,8 +107,8 @@ public abstract class Creature implements Entity {
         return this.hp > 0;
     }
 
-    @Override
     public boolean isDead() {
         return this.hp <= 0;
     }
+
 }
