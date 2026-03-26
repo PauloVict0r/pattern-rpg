@@ -82,18 +82,17 @@ public class Menu {
         ui.imprimir("\nBem vindo(a), " + nomePersonagem + "!");
         ui.pausar(1500);
 
-        // FUTURAMENTE: Essa lista de Strings será substituída por instâncias da classe Item
-        // vindas de um ItemFactory ou lidas do banco de dados.
+        // Usando agora os nomes das estratégias reais de armas disponíveis no projeto
         String[] equipamentos = {
-            "Faca cega",
-            "Arco improvisado",
-            "Armadura em frangalhos",
-            "Cajado velho",
-            "Porrete rachado",
-            "Cabo de espada",
-            "Katana de madeira",
-            "Cabo de lança",
-            "Espada de Oito Empunhaduras Divergente Sila Divina General Mahoraga"
+            "Espada Longa",
+            "Espada Curta",
+            "Machado de Batalha",
+            "Arco Longo",
+            "Adaga Furtiva",
+            "Cajado Mágico",
+            "Lâmina do Dragão",
+            "Arco Forte",
+            "Espada de Oito Empunhaduras"
         };
 
         Random random = new Random();

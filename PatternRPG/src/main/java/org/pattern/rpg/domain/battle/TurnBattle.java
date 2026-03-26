@@ -141,8 +141,7 @@ public class TurnBattle extends Battle {
                     case "1": // Ataque Rápido
                         Enemy alvoRapido = primeiroInimigoVivo();
                         if (alvoRapido != null) {
-                            int dano = 15; // FUTURAMENTE: virá da WeaponStrategy
-                            alvoRapido.takeDamage(dano);
+                            int dano = player.attack(alvoRapido); 
                             logBatalha = player.getName() + " usou Ataque Rápido em "
                                          + alvoRapido.getName() + ". Causou " + dano + " de dano.";
                         }
@@ -151,8 +150,12 @@ public class TurnBattle extends Battle {
                     case "2": // Ataque Pesado
                         Enemy alvoPesado = primeiroInimigoVivo();
                         if (alvoPesado != null) {
-                            int dano = 25; // FUTURAMENTE: virá da WeaponStrategy
-                            alvoPesado.takeDamage(dano);
+                            // Simulando um ataque pesado dobrando o dano base da arma
+                            int danoBase = player.getAttack();
+                            player.setAttack(danoBase * 2);
+                            int dano = player.attack(alvoPesado);
+                            player.setAttack(danoBase); // Volta ao normal
+                            
                             logBatalha = player.getName() + " usou Ataque Pesado em "
                                          + alvoPesado.getName() + ". Causou " + dano + " de dano!";
                         }

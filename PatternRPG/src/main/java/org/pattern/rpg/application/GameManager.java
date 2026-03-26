@@ -1,7 +1,10 @@
 package org.pattern.rpg.application;
 
 import org.pattern.rpg.domain.battle.TurnBattle;
+import org.pattern.rpg.domain.builder.PlayerBuilder;
+import org.pattern.rpg.domain.builder.PlayerDirector;
 import org.pattern.rpg.domain.entity.Player;
+import org.pattern.rpg.domain.weapon_strategy.*;
 import org.pattern.rpg.infrastructure.repository.SaveRepository;
 import org.pattern.rpg.presentation.menu.Menu;
 import org.pattern.rpg.presentation.ui.ConsoleUI;
@@ -51,19 +54,40 @@ public class GameManager {
     // -------------------------------------------------------------------------
 
     /**
-     * Ponto de entrada para um novo jogo: cria o Player e executa o
-     * laço externo de masmorra — um novo combate por andar —
-     * enquanto o player estiver vivo e não se render.
+     * Ponto de entrada para um novo jogo: cria o Player via Builder e Director
+     * e executa o laço externo de masmorra.
      */
     public void orquestrarNovoJogo(String nomeJogador, String equipamentoEscolhido) {
-        Player player = new Player(nomeJogador);
+        // Aplicação do padrão Builder + Director
+        PlayerBuilder builder = new PlayerBuilder(Player::new);
+        PlayerDirector director = new PlayerDirector();
+        director.basePlayer(builder);
+        builder.setName(nomeJogador);
+
+        // Mapeamento da WeaponStrategy real baseada na escolha do Menu
+        WeaponStrategy arma;
+        switch (equipamentoEscolhido) {
+            case "Espada Longa": arma = new LongSwordStrategy(); break;
+            case "Espada Curta": arma = new ShortSwordStrategy(); break;
+            case "Machado de Batalha": arma = new AxeStrategy(); break;
+            case "Arco Longo": arma = new BowStrategy(); break;
+            case "Adaga Furtiva": arma = new DaggerStrategy(); break;
+            case "Cajado Mágico": arma = new StaffStrategy(); break;
+            case "Lâmina do Dragão": arma = new DragonBladeStrategy(); break;
+            case "Arco Forte": arma = new StrongBowStrategy(); break;
+            case "Espada de Oito Empunhaduras": arma = new SwordStrategy(); break;
+            default: arma = new PunchStrategy();
+        }
+        builder.setWeapon(arma);
+
+        Player player = builder.getResult();
+
         this.andarAtual = 1;
         this.pontuacao = 0;
         boolean rendeu = false;
         boolean savedAndQuit = false;
 
         while (player.isAlive() && !rendeu && !savedAndQuit) {
-            // Instancia e executa um encontro para o andar atual
             TurnBattle batalha = new TurnBattle(player, menu, equipamentoEscolhido, andarAtual);
             batalha.startBattle();
 
@@ -76,12 +100,10 @@ public class GameManager {
                 break;
             }
 
-            // Se venceu o encontro E ainda está vivo: aplica progressão e avança
             if (player.isAlive() && !rendeu) {
                 pontuacao += andarAtual * 100;
                 player.incrementarStatus();
 
-                // A cada 5 andares: restaura o HP completamente ("descansão")
                 if (andarAtual % 5 == 0) {
                     player.restaurarHp();
                     menu.exibirEntreAndares(andarAtual, pontuacao, true);
@@ -93,8 +115,10 @@ public class GameManager {
             }
         }
 
-        // Ao sair do laço: se não foi salvar e sair, player morreu ou se rendeu
         if (!savedAndQuit) {
+            if (!player.isAlive()) {
+                ui.imprimir("\n[PERMADEATH] Seu personagem tombou. Jornada encerrada.");
+            }
             menu.exibirFimDeJogo(nomeJogador, equipamentoEscolhido, andarAtual);
         }
     }
@@ -114,14 +138,7 @@ public class GameManager {
                 retomarJogo(escolhido);
                 return;
             } else {
-                // Se retornou null, ou o usuário clicou em Voltar ou Deletou algo.
-                // Verificamos se ainda existem saves. Se não, saímos.
                 if (saveRepository.getAllSaves().isEmpty()) return;
-                
-                // Se o usuário clicar em Voltar ou Cancelar a deleção, o menu retorna null.
-                // Como não queremos loop infinito se ele só clicar em voltar, vamos sair se 
-                // a lista não diminuiu (indicando que ele não deletou).
-                // Mas para ser simples, vamos apenas permitir que ele saia se clicar em voltar.
                 return; 
             }
         }
@@ -131,7 +148,6 @@ public class GameManager {
         saveRepository.deleteSave(id);
         ui.imprimir("Save deletado com sucesso!");
         ui.pausar(1500);
-        continuarJogo(); // Recarrega o menu de saves
     }
 
     public List<SaveRepository.SaveData> carregarHighScores() {
@@ -144,6 +160,22 @@ public class GameManager {
         this.pontuacao = (save.floor() - 1) * 100;
         boolean rendeu = false;
         boolean savedAndQuit = false;
+
+        // Ao retomar, também mapeamos a arma guardada no save para a Strategy real
+        WeaponStrategy arma;
+        switch (save.weapon()) {
+            case "Espada Longa": arma = new LongSwordStrategy(); break;
+            case "Espada Curta": arma = new ShortSwordStrategy(); break;
+            case "Machado de Batalha": arma = new AxeStrategy(); break;
+            case "Arco Longo": arma = new BowStrategy(); break;
+            case "Adaga Furtiva": arma = new DaggerStrategy(); break;
+            case "Cajado Mágico": arma = new StaffStrategy(); break;
+            case "Lâmina do Dragão": arma = new DragonBladeStrategy(); break;
+            case "Arco Forte": arma = new StrongBowStrategy(); break;
+            case "Espada de Oito Empunhaduras": arma = new SwordStrategy(); break;
+            default: arma = new PunchStrategy();
+        }
+        player.setWeapon(arma);
 
         while (player.isAlive() && !rendeu && !savedAndQuit) {
             TurnBattle batalha = new TurnBattle(player, menu, save.weapon(), andarAtual);
@@ -174,6 +206,10 @@ public class GameManager {
         }
 
         if (!savedAndQuit) {
+            if (!player.isAlive()) {
+                ui.imprimir("\n[PERMADEATH] Seu personagem tombou. Save deletado.");
+                saveRepository.deleteSave(save.id());
+            }
             menu.exibirFimDeJogo(save.name(), save.weapon(), andarAtual);
         }
     }
