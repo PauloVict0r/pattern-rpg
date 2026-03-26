@@ -1,18 +1,16 @@
 package org.pattern.rpg.presentation.menu;
 
 import org.pattern.rpg.application.GameManager;
-import org.pattern.rpg.domain.entity.Save;
-import org.pattern.rpg.presentation.ui.ConsoleUI;
-<<<<<<< HEAD
-import org.pattern.rpg.domain.entity.enemy.Enemy;
 import org.pattern.rpg.domain.entity.Player;
-import org.pattern.rpg.domain.factory.*;
-import org.pattern.rpg.domain.entity.*;
-=======
+import org.pattern.rpg.domain.entity.Save;
+import org.pattern.rpg.domain.entity.enemy.Enemy;
+import org.pattern.rpg.presentation.ui.ConsoleUI;
 
 import java.util.List;
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
 import java.util.Random;
+
+import org.pattern.rpg.domain.entity.Entity;
+
 import java.util.List;
 
 public class Menu {
@@ -25,11 +23,7 @@ public class Menu {
         this.facade = facade;
     }
 
-<<<<<<< HEAD
-    public void exibirMenuPrincipal(ConsoleUI ui) {
-=======
     public void showMainMenu() {
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("      BEM-VINDO VIAJANTE!        ");
@@ -53,15 +47,7 @@ public class Menu {
                     showScores();
                     break;
                 case 3:
-<<<<<<< HEAD
-                    ui.imprimir("=> Opção escolhida: Visualizar SCORES.");
-                    exibirScores(ui);
-                    break;
-                case 4:
-                    ui.imprimir("=> Opção escolhida: SAIR. Até a próxima aventura!");
-=======
                     ui.imprimir("=> Encerrando o jogo. Até a próxima aventura!");
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
                     ui.pausar(1000);
                     facade.stopGame();
                     break;
@@ -259,18 +245,10 @@ public class Menu {
         ui.imprimir("\nPressione [ENTER] para iniciar...");
         ui.lerEntrada();
 
-<<<<<<< HEAD
-        // O Menu delega a continuação para o Facade
-        facade.orquestrarNovoJogo(nomePersonagem);
-    }
-
-    private void exibirScores(ConsoleUI ui) {
-=======
         facade.startNewGame(playerName, chosenEquipment);
     }
 
     private void showScores() {
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
         ui.limparTerminal();
         ui.imprimir("=================================");
         ui.imprimir("            HIGHSCORES           ");
@@ -286,19 +264,6 @@ public class Menu {
         ui.lerEntrada();
     }
 
-<<<<<<< HEAD
-    public void exibirFimDeJogo(String nomeJogador, ConsoleUI ui) {
-        ui.limparTerminal();
-        ui.imprimir("=================================");
-        ui.imprimir("            FIM DE JOGO           ");
-        ui.imprimir("=================================");
-        
-        // FUTURAMENTE: Os dados virão da entidade Player
-        ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", nomeJogador));
-        //ui.imprimir(String.format("| %-15s | %-11s |", "Equipamento", equipamentoEscolhido));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Piso Final", "100"));
-        ui.imprimir("=================================");
-=======
     public void showGameOver(String playerName, String chosenEquipment) {
         boolean onGameOverScreen = true;
 
@@ -378,12 +343,11 @@ public class Menu {
                 ui.pausar(2000);
             }
         }
->>>>>>> c1cf550de9946faab49543fd234cc0bb1ea0c7f9
 
         ui.limparTerminal();
     }
 
-    public static void Batalha(Player player, List<Enemy> enemiesList, String logBatalha, ConsoleUI ui) {
+    public static void Batalha(Entity player, List<Enemy> enemiesList, String logBatalha, ConsoleUI ui) {
         boolean acao = true;
         int nivel = 1;
         int vida = 100;

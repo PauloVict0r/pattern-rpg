@@ -16,25 +16,30 @@ public class TurnBattle extends Battle {
     
     // lista de inimigos e player
     private List<Enemy> enemies;
-    private Player player;
+    private Entity player;
     private String logBatalha;
     private ConsoleUI ui;
-    private Scanner scanner;
     
     // fila de turnos
-    private List<Creature> turnQueue;
+    private List<Entity> turnQueue;
     private int currentTurnIndex;
     
     // construtor
-    public TurnBattle(Player player, Scanner scanner, ConsoleUI ui) {
-        this.scanner = scanner;
+    public TurnBattle(Entity player, ConsoleUI ui) {
         this.ui = ui;
         this.player = player;
     }
 
     @Override
     protected List<Enemy> createEnemies() {
-        List<String> enumEnemies = List.of("goblin", "wolf", "skeleton", "vampire", "dragon", "hollow");
+        List<String> enumEnemies = new ArrayList<>();
+        enumEnemies.add("goblin");
+        enumEnemies.add("wolf");
+        enumEnemies.add("dragon");
+        enumEnemies.add("hollow");
+        enumEnemies.add("skeleton");
+        enumEnemies.add("vampire");
+
         List<Enemy> spawnedEnemies = new ArrayList<>();
         int numEnemies = new Random().nextInt(3) + 1; // 1 a 3 inimigos
 
@@ -62,9 +67,9 @@ public class TurnBattle extends Battle {
     }
 
     @Override
-    protected Creature nextTurn() {
+    protected Entity nextTurn() {
         // pega o próximo na fila de turnos
-        Creature current = turnQueue.get(currentTurnIndex);
+        Entity current = turnQueue.get(currentTurnIndex);
         currentTurnIndex = (currentTurnIndex + 1) % turnQueue.size();
 
         // se a entidade estiver morta, pula para o próximo
@@ -77,14 +82,14 @@ public class TurnBattle extends Battle {
     }
 
     @Override
-    protected void executeTurn(Creature creature) {
-        if (creature instanceof Player) {
+    protected void executeTurn(Entity entity) {
+        if (entity instanceof Player) {
             logBatalha = "Seu turno! Escolha sua ação";
             Menu.Batalha(player, enemies, logBatalha, ui);
             // lógica player (por fazer)
         } else {
-            logBatalha = "Turno do Inimigo: " + creature.getName();
-            //creature.attack();
+            logBatalha = "Turno do Inimigo: " + entity.getName();
+            entity.attack(player);
         }
     }
 
