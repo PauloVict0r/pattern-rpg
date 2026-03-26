@@ -167,10 +167,15 @@ public class Menu {
         ui.imprimir(String.format("| %-15s | %-11s |", "Personagem", "Último Piso"));
         ui.imprimir("---------------------------------");
 
-        // FUTURAMENTE: Esses dados serão um List<Score> puxados do SaveRepository.java
-        ui.imprimir(String.format("| %-15s | %-11s |", "Gandalf", "15"));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Arthur", "100"));
-        ui.imprimir(String.format("| %-15s | %-11s |", "Gandalf", "11"));
+        List<SaveRepository.SaveData> scores = facade.carregarHighScores();
+        
+        if (scores.isEmpty()) {
+            ui.imprimir("|       SEM RECORDES AINDA      |");
+        } else {
+            for (SaveRepository.SaveData s : scores) {
+                ui.imprimir(String.format("| %-15s | %-11s |", s.name(), s.floor()));
+            }
+        }
         ui.imprimir("---------------------------------");
 
         ui.imprimir("\n Pressione [ENTER] para retornar ao Menu Principal...");

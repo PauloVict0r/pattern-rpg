@@ -126,6 +126,31 @@ public class SaveRepository {
         return saves;
     }
 
+    public List<SaveData> getHighScores() {
+        List<SaveData> saves = new ArrayList<>();
+        String sql = "SELECT * FROM saves ORDER BY floor DESC LIMIT 10";
+        Connection conn = ConnectionDB.getInstance().getConnection();
+        if (conn == null) return saves;
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                saves.add(new SaveData(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getInt("hp"),
+                    rs.getInt("attack"),
+                    rs.getInt("defense"),
+                    rs.getDouble("crit"),
+                    rs.getInt("floor"),
+                    rs.getString("weapon")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar scores: " + e.getMessage());
+        }
+        return saves;
+    }
+
     public void deleteSave(int id) {
         String sql = "DELETE FROM saves WHERE id = ?";
         Connection conn = ConnectionDB.getInstance().getConnection();

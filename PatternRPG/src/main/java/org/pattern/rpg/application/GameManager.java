@@ -134,6 +134,10 @@ public class GameManager {
         continuarJogo(); // Recarrega o menu de saves
     }
 
+    public List<SaveRepository.SaveData> carregarHighScores() {
+        return saveRepository.getHighScores();
+    }
+
     private void retomarJogo(SaveRepository.SaveData save) {
         Player player = new Player(save.name(), save.hp(), save.attack(), save.defense(), save.crit());
         this.andarAtual = save.floor();
