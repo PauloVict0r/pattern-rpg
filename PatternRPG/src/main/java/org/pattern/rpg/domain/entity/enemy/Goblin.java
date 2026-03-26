@@ -2,7 +2,8 @@ package org.pattern.rpg.domain.entity.enemy;
 
 import org.pattern.rpg.domain.entity.Entity;
 
-public class Goblin extends Enemy{
+public class Goblin extends Enemy {
+    
     public Goblin() {
         this.setName("Goblin Sorrateiro");
         this.setHP(30);

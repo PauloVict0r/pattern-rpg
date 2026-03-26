@@ -18,3 +18,4 @@ public class Vampire extends Enemy {
         return damageDealt;
     }
 }
+

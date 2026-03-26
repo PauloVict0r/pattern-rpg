@@ -4,6 +4,7 @@ import org.pattern.rpg.domain.entity.Entity;
 
 public class Hollow extends Enemy {
     public Hollow() {
+        
         this.setName("Hollow");
         this.setHP(15);
         this.setAttack(5);
